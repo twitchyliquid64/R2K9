@@ -12,11 +12,11 @@
 
 </head>
 
-<body layout="column" ng-app="baseApp" ng-controller="loggingController as loggingC">
+<body layout="column" ng-app="baseApp" ng-controller="mainController as mainC">
     <md-toolbar layout="row">
         <h1 flex="33" offset="13"><md-icon md-font-library="material-icons" style="font-size: 48px;">gestures</md-icon> R2K9</h1>
         <div class="md-toolbar-tools">
-            <md-button ng-click="loggingC.toggle()" hide-gt-sm class="md-icon-button">
+            <md-button ng-click="mainC.toggle()" hide-gt-sm class="md-icon-button">
                 <md-icon aria-label="Menu" md-svg-icon="/static/img/menu.svg"></md-icon>
             </md-button>
         </div>
@@ -25,23 +25,23 @@
 		
 		<!-- sidenav -->
         <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" style="padding-left: 22px;">
-            <md-button style="text-align:left" ng-click="loggingController.activate()">
+            <md-button style="text-align:left" ng-click="mainC.activate('logging')">
                 <md-icon md-font-library="material-icons">reorder</md-icon> Log
             </md-button>
             
-            <md-button style="text-align:left">
+            <md-button style="text-align:left" ng-click="mainC.activate('parametrics')">
                 <md-icon md-font-library="material-icons">tune</md-icon> Parametrics
             </md-button>
             
-            <md-button style="text-align:left">
+            <md-button style="text-align:left" ng-click="mainC.activate('render')">
                 <md-icon md-font-library="material-icons">tv</md-icon> Render
             </md-button>
             
-            <md-button style="text-align:left">
+            <md-button style="text-align:left" ng-click="mainC.activate('save')">
                 <md-icon md-font-library="material-icons">memory</md-icon> Save
             </md-button>
             
-            <md-button style="text-align:left">
+            <md-button style="text-align:left" ng-click="mainC.activate('export')">
                 <md-icon md-font-library="material-icons">share</md-icon> Export
             </md-button>
             
@@ -50,8 +50,24 @@
         
         <!-- line by line container for main content -->
         <div layout="column" flex id="content">
-            <md-content layout="row" flex class="md-padding ng-hide" ng-hide="loggingC.focus">
+            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'logging'">
                 <h1>System Log</h1>
+            </md-content>
+            
+            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'parametrics'">
+                <h1>Parametrics</h1>
+            </md-content>
+            
+            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'render'">
+                <h1>Render</h1>
+            </md-content>
+            
+            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'save'">
+                <h1>Save</h1>
+            </md-content>
+            
+            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'export'">
+                <h1>Export</h1>
             </md-content>
 
         </div>
@@ -70,7 +86,7 @@
     <script src="/static/js/app/baseApp.js"></script>
 
     <!-- Module peripherals can come after in any order -->
-    <script src="/static/js/app/loggingController.js"></script>
+    <script src="/static/js/app/mainController.js"></script>
 
   </body>
 </html>
