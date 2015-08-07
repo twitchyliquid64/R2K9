@@ -57,14 +57,14 @@
 
 			<div id="logDisplay" layout="column" flex="80" class="logContainer">
 				<div class="logElement" layout="row" ng-repeat="line in mainC.logMessages">
-					<span flex="5" class="logTime">{{line[0] | number : 3}}</span>
+					<span flex class="logTime">{{line[0] | number : 3}}</span>
 					<span flex="95">{{line[1]}}</span>
 				</div>
 			</div>
 		</div>
             </md-content>
             
-            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'parametrics'">
+            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'parametrics'" ng-controller="parametricController as para">
                 <h1>Parametrics</h1>
             </md-content>
             
@@ -96,6 +96,7 @@
     <script src="/static/js/app/baseApp.js"></script>
 
     <!-- Module peripherals can come after in any order -->
+    <script src="/static/js/app/parametricController.js"></script>
     <script src="/static/js/app/mainController.js"></script>
 
   </body>
