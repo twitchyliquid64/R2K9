@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="/static/css/angular-material.min.css">
+    <link rel="stylesheet" href="/static/css/r2k9.css">
     <link rel="stylesheet" href="/static/fonts/roboto.css">
     <link rel="stylesheet" href="/static/fonts/material-icons/materialicons.css">
     <meta name="viewport" content="initial-scale=1" />
@@ -49,9 +50,18 @@
         </md-sidenav>
         
         <!-- line by line container for main content -->
-        <div layout="column" flex id="content">
-            <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'logging'">
-                <h1>System Log</h1>
+        <div layout="column" flex="99" id="content">
+            <md-content layout="row" flex="99" class="md-padding" ng-show="mainC.focus == 'logging'">
+                <div layout="column" flex="99">
+			<h1>System Log</h1>
+
+			<div id="logDisplay" layout="column" flex="80" class="logContainer">
+				<div class="logElement" layout="row" ng-repeat="line in mainC.logMessages">
+					<span flex="5" class="logTime">{{line[0] | number : 3}}</span>
+					<span flex="95">{{line[1]}}</span>
+				</div>
+			</div>
+		</div>
             </md-content>
             
             <md-content layout="row" flex class="md-padding" ng-show="mainC.focus == 'parametrics'">
