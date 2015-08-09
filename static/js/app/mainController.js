@@ -1,14 +1,18 @@
 (function () {
 
     angular.module('baseApp')
-        .controller('mainController', ['$mdSidenav', mainController]);
+        .controller('mainController', ['$mdSidenav', 'logger', mainController]);
 
-    function mainController($mdSidenav) {
+    function mainController($mdSidenav, $logger) {
         var self = this;
 
         self.focus = 'logging';
-	self.logMessages = [[0,"System started."]];
-	self.startTime = Date.now();
+		self.logMessages = [[0,"System started."]];
+		self.startTime = Date.now();
+		
+		self.getLogMsgs = function() {
+			return $logger.logMsgs;
+		};
 
         self.activate = function (element) {
             self.focus = element;
@@ -18,9 +22,6 @@
             $mdSidenav('left').toggle();
         };
 
-	self.log = function(message) {
-		self.logMessages[self.logMessages.length] = [Date.now() - self.startTime, message];
-	};
-	self.log("Main controller initialised.");
+	$logger.log("Main controller initialised.");
     }
 })();
