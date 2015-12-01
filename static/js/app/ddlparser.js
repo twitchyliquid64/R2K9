@@ -23,6 +23,7 @@ function isLetter(ch) {
 	var code = ch.charCodeAt(0);
 	if ( ((code >= 65) && (code <= 90)) || ((code >= 97) && (code <= 122)))
 		return true;
+	if (code == "-".charCodeAt(0))return true;
 	return false;
 }
 

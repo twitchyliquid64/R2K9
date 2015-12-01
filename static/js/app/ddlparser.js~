@@ -23,6 +23,7 @@ function isLetter(ch) {
 	var code = ch.charCodeAt(0);
 	if ( ((code >= 65) && (code <= 90)) || ((code >= 97) && (code <= 122)))
 		return true;
+	if (ch == "-")return true;
 	return false;
 }
 
@@ -47,6 +48,7 @@ function lex(){
 				buff += rawContent[i];
 				i++;
 			}
+			while(rawContent[i]==" ")i++; //advance whitespace
 			if (rawContent[i] == ":"){
 				outputTokens[outputTokens.length] = newTokenObject(TOKEN_KEY, buff);
 				i++;
