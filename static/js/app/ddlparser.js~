@@ -1,8 +1,9 @@
-function newTokenObject(tokenType, tokenParam){
+function newTokenObject(tokenType, tokenParam, keys){
 	var ret = new Object();
 	ret.is = "TOKEN";
 	ret.ttype = tokenType;
 	ret.param = tokenParam;
+	ret.values = keys;
 	return ret;
 }
 
@@ -23,7 +24,7 @@ function isLetter(ch) {
 	var code = ch.charCodeAt(0);
 	if ( ((code >= 65) && (code <= 90)) || ((code >= 97) && (code <= 122)))
 		return true;
-	if (ch == "-")return true;
+	if (code == "-".charCodeAt(0))return true;
 	return false;
 }
 
@@ -34,13 +35,23 @@ function lex(){
 	var mode = MODE_NOT_PARSING;
 	for (var i = 0; i < rawContent.length; i++) //loop through each character
 	{
-		if (!isNaN(parseInt(rawContent[i]))) {	//if its not an invalid number (its a number)
+		if (!isNaN(parseFloat(rawContent[i]))) {	//if its not an invalid number (its a number)
 			var buff = "";
-			while (!isNaN(parseInt(rawContent[i]))) {
+			var isFloat = false;
+			while (!isNaN(parseFloat(rawContent[i]))) {
 				buff += rawContent[i];
 				i++;
 			}
-			outputTokens[outputTokens.length] = newTokenObject(TOKEN_NUMBER, parseInt(buff));
+			if (rawContent[i] == ".") {
+				isFloat = true;
+				buff += rawContent[i];
+				i++;
+				while (!isNaN(parseFloat(rawContent[i]))) {
+					buff += rawContent[i];
+					i++;
+				}
+			}
+			outputTokens[outputTokens.length] = newTokenObject(TOKEN_NUMBER, parseFloat(buff), {'isFloat': isFloat});
 			i--;
 		} else if (isLetter(rawContent[i])) {	//if it is a letter
 			var buff = "";
@@ -74,10 +85,70 @@ function lex(){
 	}
 
 	printTokens(outputTokens);
+	return outputTokens;
 };
 
 function printTokens(outputTokens) {
 	for (var i = 0; i < outputTokens.length; i++) {
 		console.log(outputTokens[i]);
+	}
+}
+
+
+
+
+
+var AST_ROOT = "ROOT";
+var AST_DESCRIPTOR = "DESC"; //function call / object
+var AST_NUMBER_LIT = "NUMBER";
+
+function newNode(name){
+	var ret = new Object();
+	ret.namedChildren = {};
+	ret.unnamedChildren = [];
+	ret.nodeName = name;
+	ret.add = function(name, node){
+		if (node == null)return;
+		if(name == null){
+			ret.unnamedChildren[ret.unnamedChildren.length] = node;
+		} else {
+			ret.namedChildren[name] = node;
+		}
+	}
+	return ret;
+}
+
+function run(){
+	var toks = lex();
+	console.log(recursiveParse(toks, 0));
+}
+
+
+function recursiveParse( tokenSet, tokenPosition) {
+	for (var i = tokenPosition; i < tokenSet.length; i++) {
+
+		if (tokenSet[i].ttype == TOKEN_IDENTIFIER) {
+			if( ((i+1) < tokenSet.length) && (tokenSet[i+1].ttype == TOKEN_OPENING_PARENTHESIS)) {//new descriptor
+				var descriptor_name = tokenSet[i].param;
+				var retNode = newNode(AST_DESCRIPTOR);
+				i += 2;
+				while ((i < tokenSet.length) && (tokenSet[i].ttype != TOKEN_CLOSING_PARENTHESIS)){
+					var r = recursiveParse(tokenSet, i);
+					i = r.pos + 1;
+					retNode.add(r.nodeName, r.obj);
+				}
+				return {obj: retNode, pos: i, nodeName: descriptor_name};
+			}
+		}
+
+		else if (tokenSet[i].ttype == TOKEN_NUMBER) {
+			var retNode = newNode(AST_NUMBER_LIT);
+			return {obj: retNode, pos: i+1, nodeName: null};
+		}
+
+		else if (tokenSet[i].ttype == TOKEN_SEPARATOR) {
+			return {obj: null, pos: i+1, nodeName: null};
+		}
+
 	}
 }

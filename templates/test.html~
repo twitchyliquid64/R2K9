@@ -68,7 +68,7 @@
                 <h1 flex>Parametrics</h1>
 
 		<textarea flex rows="5" columns="15" id="rawcontent"></textarea>
-		    <button onclick="parse();" flex> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
+		    <button onclick="lex();" flex> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
 		<div flex></div>
             </md-content>
             
