@@ -37,8 +37,7 @@ function isNumberChar(ch) {
 }
 
 
-function lex(){
-	var rawContent = document.getElementById("rawcontent").value;
+function lex(rawContent){
 	var outputTokens = [];
 
 	var mode = MODE_NOT_PARSING;
@@ -118,6 +117,7 @@ var AST_NUMBER_LIT = "NUMBER";
 var AST_STRING_LIT = "STRING";
 var AST_IDENTIFIER = "IDENTIFIER";
 var AST_KEY_VAL_LIT = "KEY_VAL";
+var AST_ASSIGNMENT = "ASSIGN";
 
 
 function newNode(name){
@@ -137,8 +137,19 @@ function newNode(name){
 }
 
 function run(){
-	var toks = lex();
-	console.log(recursiveParse(toks, 0).obj);
+	var toks = lex(document.getElementById("rawcontent").value);
+	var rootNode = newNode(AST_ROOT);
+	var i = 0;
+	while (i < toks.length) {
+		var n = recursiveParse(toks, i);
+		if (n != null && n != undefined) {
+			rootNode.add(n.nodeName, n.obj);
+			i = n.pos;
+		} else {
+			i++;
+		}
+	}
+	console.log(rootNode);
 }
 
 
@@ -157,6 +168,17 @@ function recursiveParse( tokenSet, tokenPosition) {
 				}
 				retNode.value = descriptor_name;
 				return {obj: retNode, pos: i, nodeName: null};
+			} else if( ((i+1) < tokenSet.length) && (tokenSet[i+1].ttype == TOKEN_ASSIGN)) {//assignment
+				var descriptor_name = tokenSet[i].param;
+				var retNode = newNode(AST_ASSIGNMENT);
+				i += 2;
+
+				var r = recursiveParse(tokenSet, i);
+				i = r.pos + 1;
+				retNode.add(r.nodeName, r.obj);
+
+				retNode.value = descriptor_name;
+				return {obj: retNode, pos: i, nodeName: null};	
 			} else { //not a function call, must be a literal
 				var retNode = newNode(AST_IDENTIFIER);
 				retNode.value = tokenSet[i].param;
