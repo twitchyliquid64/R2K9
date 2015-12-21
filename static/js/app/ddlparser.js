@@ -14,6 +14,7 @@ var TOKEN_OPENING_PARENTHESIS = "(";
 var TOKEN_CLOSING_PARENTHESIS = ")";
 var TOKEN_SEPARATOR = ",";
 var TOKEN_KEY = "KEY";
+var TOKEN_ASSIGN = "ASSIGN";
 
 var MODE_NOT_PARSING = 0;
 var MODE_READING_IDENTIFIER = 1;
@@ -27,6 +28,14 @@ function isLetter(ch) {
 	if (code == "-".charCodeAt(0))return true;
 	return false;
 }
+
+function isNumberChar(ch) {
+	var code = ch.charCodeAt(0);
+	if ((code >= 48) && (code <= 57))
+		return true;
+	return false;
+}
+
 
 function lex(){
 	var rawContent = document.getElementById("rawcontent").value;
@@ -55,12 +64,12 @@ function lex(){
 			i--;
 		} else if (isLetter(rawContent[i])) {	//if it is a letter
 			var buff = "";
-			while (isLetter(rawContent[i])) {
+			while ((i < rawContent.length) && (isLetter(rawContent[i]) || isNumberChar(rawContent[i]))) {
 				buff += rawContent[i];
 				i++;
 			}
 			while(rawContent[i]==" ")i++; //advance whitespace
-			if (rawContent[i] == ":"){
+			if (rawContent[i] == ":" && (rawContent[i+1] != "=")){
 				outputTokens[outputTokens.length] = newTokenObject(TOKEN_KEY, buff);
 				i++;
 			} else {
@@ -81,6 +90,11 @@ function lex(){
 			outputTokens[outputTokens.length] = newTokenObject(TOKEN_CLOSING_PARENTHESIS, ")");
 		} else if (rawContent[i] == TOKEN_SEPARATOR) {
 			outputTokens[outputTokens.length] = newTokenObject(TOKEN_SEPARATOR, ",");
+		} else if ((rawContent[i] == ":") && (rawContent[i+1] == "=")) {
+			outputTokens[outputTokens.length] = newTokenObject(TOKEN_ASSIGN, "=");
+			i++;
+		} else {
+			console.log("Unparsed character:", rawContent[i]);
 		}
 	}
 
