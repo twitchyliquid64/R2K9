@@ -33,6 +33,12 @@ function newNode(name){
 
 function run(){
 	var toks = lex(document.getElementById("rawcontent").value);
+	var rootNode = ddlParse(toks);
+	console.log(rootNode);
+	rootNode.exec(newOutputContext());
+}
+
+function ddlParse(toks) {
 	var rootNode = newNode(AST_ROOT);
 	var i = 0;
 	while (i < toks.length) {
@@ -44,10 +50,8 @@ function run(){
 			i++;
 		}
 	}
-	console.log(rootNode);
-	rootNode.exec(newOutputContext());
+	return rootNode;
 }
-
 
 function recursiveParse( tokenSet, tokenPosition) {
 	for (var i = tokenPosition; i < tokenSet.length; i++) {

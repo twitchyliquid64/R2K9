@@ -1,5 +1,5 @@
 (function() {
-    
-    angular.module('baseApp', ['ngMaterial']);
-    
+
+    angular.module('baseApp', ['ngMaterial', 'angularTreeview']);
+
 })();
