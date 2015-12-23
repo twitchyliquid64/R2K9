@@ -68,7 +68,7 @@
                 <h1 flex>Parametrics</h1>
 
 		<textarea flex rows="5" columns="15" id="rawcontent"></textarea>
-		    <button onclick="lex();" flex> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
+		    <button onclick="run();" flex> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
 		<div flex></div>
             </md-content>
             
@@ -100,6 +100,7 @@
     <!-- Module declaration needs to come first -->
     <script src="/static/js/app/baseApp.js"></script>
     <script src="/static/js/app/loggerService.js"></script>
+    <script src="/static/js/app/ddllexer.js"></script>
     <script src="/static/js/app/ddlparser.js"></script>
 
     <!-- Module peripherals can come after in any order -->
