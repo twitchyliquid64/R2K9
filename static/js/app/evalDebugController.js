@@ -1,9 +1,9 @@
 (function () {
 
     angular.module('baseApp')
-        .controller('parseDebugController', ['$scope', parseDebugController]);
+        .controller('evalDebugController', ['$scope', evalDebugController]);
 
-    function parseDebugController($scope) {
+    function evalDebugController($scope) {
         var self = this;
 
         self.parseIntoTreeNode = function(node, keyName){
@@ -51,10 +51,13 @@
         }
 
         $scope.execute = function(){
-          var toks = lex(document.getElementById("rawcontent_parse").value);
+          var toks = lex(document.getElementById("rawcontent_eval").value);
         	var rootNode = ddlParse(toks);
-        	console.log(rootNode);
         	self.parseAstIntoTreeNodes(rootNode);
+          console.log(rootNode);
+          var ctx = newOutputContext();
+          rootNode.exec(ctx);
+          console.log(ctx);
         };
 
         $scope.treedata = [];

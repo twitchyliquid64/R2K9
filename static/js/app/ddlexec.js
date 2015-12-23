@@ -16,6 +16,10 @@ function ddlExec(outputContext, node){
       return newVariant(VAR_STRING, node.value);
       break;
 
+    case AST_ASSIGNMENT:
+      outputContext.globalVars[node.value] = ddlExec(outputContext, node.unnamedChildren[0]);
+      break;
+
     case AST_KEY_VAL_LIT: //lightweight wrapper around another value - just recurse.
       return ddlExec(outputContext, node.unnamedChildren[0]);
 
@@ -63,6 +67,7 @@ function newVariant(typ, value){
 
 function newOutputContext(){
   var ret = new Object();
+  ret.globalVars = {};
   ret.functionHandlers = {};
   ret.functionHandlers['debugparams'] = function(outputContext, unordered, ordered){
     console.log("PARAM DEBUG:", unordered, ordered);

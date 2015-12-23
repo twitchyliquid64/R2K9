@@ -27,38 +27,75 @@
 
 		<!-- sidenav -->
         <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" style="padding-left: 22px;">
+        <md-list>
+          <md-subheader class="md-no-sticky">Main</md-subheader>
+          <md-subheader class="md-no-sticky">Debugging</md-subheader>
+
+          <md-list-item>
             <md-button style="text-align:left" ng-click="mainC.activate('main')">
                 <md-icon md-font-library="material-icons">code</md-icon> Parse Debugger
             </md-button>
+          </md-list-item>
 
+          <md-list-item>
+            <md-button style="text-align:left" ng-click="mainC.activate('eval')">
+                <md-icon md-font-library="material-icons">storage</md-icon> Eval Debugger
+            </md-button>
+          </md-list-item>
+        </md-list>
         </md-sidenav>
 
         <!-- line by line container for main content -->
         <div layout="column" flex="99" id="content">
 
-            <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'main'" ng-controller="parseDebugController">
-                <h1 flex="5">Parse debugger</h1>
+          <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'main'" ng-controller="parseDebugController">
+              <h1 flex="5">Parse debugger</h1>
 
-                <div layout="row" flex>
-                  <div layout="column" flex="60">
-            		    <textarea rows="20" columns="15" id="rawcontent"></textarea>
+              <div layout="row" flex>
+                <div layout="column" flex="60">
+                  <textarea rows="20" columns="15" id="rawcontent_parse"></textarea>
 
-            		    <button ng-click="execute()" flex="8"> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
-            		    <div flex></div>
-                  </div>
+                  <button ng-click="execute()" flex="8"> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
+                  <div flex></div>
+                </div>
 
-                  <div layout="column" flex="89">
-                    <div
-                        data-angular-treeview="true"
-                        data-tree-id="parsetree"
-                        data-tree-model="treedata"
-                        data-node-id="id"
-                        data-node-label="nodeName"
-                        data-node-children="children" >
-                    </div>
+                <div layout="column" flex="89">
+                  <div
+                      data-angular-treeview="true"
+                      data-tree-id="parsetree"
+                      data-tree-model="treedata"
+                      data-node-id="id"
+                      data-node-label="nodeName"
+                      data-node-children="children" >
                   </div>
                 </div>
-            </md-content>
+              </div>
+          </md-content>
+
+
+          <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'eval'" ng-controller="evalDebugController">
+              <h1 flex="5">Eval debugger</h1>
+
+              <div layout="row" flex>
+                <div layout="column" flex="60">
+                  <textarea rows="20" columns="15" id="rawcontent_eval"></textarea>
+
+                  <button ng-click="execute()" flex="8"> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
+                  <div flex></div>
+                </div>
+
+                <div layout="column" flex="89">
+                  <div
+                      data-angular-treeview="true"
+                      data-tree-id="parsetree"
+                      data-tree-model="treedata"
+                      data-node-id="id"
+                      data-node-label="nodeName"
+                      data-node-children="children" >
+                  </div>
+                </div>
+              </div>
+          </md-content>
 
         </div>
     </div>
@@ -82,6 +119,7 @@
 
     <!-- Module peripherals can come after in any order -->
     <script src="/static/js/app/parseDebugController.js"></script>
+    <script src="/static/js/app/evalDebugController.js"></script>
     <script src="/static/js/app/mainController.js"></script>
 
   </body>
