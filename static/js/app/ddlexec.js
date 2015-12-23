@@ -20,6 +20,13 @@ function ddlExec(outputContext, node){
       outputContext.globalVars[node.value] = ddlExec(outputContext, node.unnamedChildren[0]);
       break;
 
+    case AST_IDENTIFIER:
+      if (node.value in outputContext.globalVars) {
+        return outputContext.globalVars[node.value];
+      }
+      return newVariant(VAR_UNDEFINED, undefined);
+      break;
+
     case AST_KEY_VAL_LIT: //lightweight wrapper around another value - just recurse.
       return ddlExec(outputContext, node.unnamedChildren[0]);
 

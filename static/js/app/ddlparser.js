@@ -44,6 +44,7 @@ function ddlParse(toks) {
 	while (i < toks.length) {
 		var n = recursiveParse(toks, i);
 		if (n != null && n != undefined) {
+			console.log(n);
 			rootNode.add(n.nodeName, n.obj);
 			i = n.pos;
 		} else {

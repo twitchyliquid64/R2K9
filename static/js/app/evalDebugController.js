@@ -6,61 +6,61 @@
     function evalDebugController($scope) {
         var self = this;
 
-        self.parseIntoTreeNode = function(node, keyName){
-          var out = {'children': []};
-          out.nodeName = node.nodeName;
-
-          if (node.nodeName == AST_NUMBER_LIT){
-            out.nodeName = String(node.value) +  " (literal)";
+        self.readVariantIntoTreeNode = function(variant, name){
+          if (variant.type == VAR_NUMBER){
+            return {'children': [], 'n': name + " = " + variant.value + " (number)"};
           }
-          if (node.nodeName == AST_DESCRIPTOR){
-            out.nodeName = String(node.value) +  " (function descriptor)";
+          if (variant.type == VAR_STRING){
+            return {'children': [], 'n': name + " = " + variant.value + " (string)"};
           }
-          if (node.nodeName == AST_STRING_LIT){
-            out.nodeName = '\'' + String(node.value) +  "' (literal)";
-          }
-          if (node.nodeName == AST_KEY_VAL_LIT){
-            out.nodeName = String(keyName) +  " (named parameter)";
-          }
-          if (node.nodeName == AST_ASSIGNMENT){
-            out.nodeName = String(node.value) +  " =";
-          }
-          if (node.nodeName == AST_IDENTIFIER){
-            out.nodeName = String(node.value) +  " (variable reference)";
-          }
-
-          for(var i = 0; i < node.unnamedChildren.length; i++) {
-            out.children[out.children.length] = self.parseIntoTreeNode(node.unnamedChildren[i]);
-          }
-
-          for (var key in node.namedChildren) {
-            if (node.namedChildren.hasOwnProperty(key)){
-              out.children[out.children.length] = self.parseIntoTreeNode(node.namedChildren[key], key);
+          if (variant.type == VAR_OBJECT){
+            var c = [];
+            for (var key in variant.value) {
+              if (variant.value.hasOwnProperty(key)){
+                c[c.length] = self.readVariantIntoTreeNode(variant.value[key], key);
+              }
             }
+            return {'children': c, 'n': name + " (object)"};
           }
-          return out
+          if (variant.type == VAR_UNDEFINED){
+            return {'children': [], 'n': name + " = UNDEFINED"};
+          }
         }
 
-        self.parseAstIntoTreeNodes = function(root){
+
+        self.genGlobalsList = function(globals){
           var out = [];
 
-          for(var i = 0; i < root.unnamedChildren.length; i++) {
-            out[out.length] = self.parseIntoTreeNode(root.unnamedChildren[i]);
+          for (var key in globals) {
+            if (globals.hasOwnProperty(key)){
+              out[out.length] = self.readVariantIntoTreeNode(globals[key], key);
+            }
           }
-          $scope.treedata = [{'nodeName': "Root", 'children': out}]
+          return out;
+        }
+
+        self.genErrorsList = function(errors){
+          var out = [];
+          for(var i = 0; i < errors.length; i++) {
+            out[out.length] = {n: errors[i].o, children: []};
+          }
+          return out;
         }
 
         $scope.execute = function(){
           var toks = lex(document.getElementById("rawcontent_eval").value);
         	var rootNode = ddlParse(toks);
-        	self.parseAstIntoTreeNodes(rootNode);
           console.log(rootNode);
           var ctx = newOutputContext();
           rootNode.exec(ctx);
           console.log(ctx);
+          $scope.treedata = [{n: 'Globals', children: self.genGlobalsList(ctx.globalVars)},
+                             {n: 'Errors' , children: self.genErrorsList(ctx.errors)}];
+          console.log($scope.treedata);
         };
 
         $scope.treedata = [];
+        $scope.errors = [];
 
     }
 })();
