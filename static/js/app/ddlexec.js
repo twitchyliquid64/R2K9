@@ -20,10 +20,33 @@ function ddlExec(outputContext, node){
       outputContext.globalVars[node.value] = ddlExec(outputContext, node.unnamedChildren[0]);
       break;
 
+    case AST_DEREF:
+      var v = ddlExec(outputContext, node.unnamedChildren[0]);
+      if (v.type != VAR_OBJECT) {
+        err = {t: "V_DEREF_FAILED", o: "Cannot dot dereference non-object type: " + v.type};
+        outputContext.errors[outputContext.errors.length] = err;
+        console.error(err.t, err.o);
+        return newVariant(VAR_UNDEFINED, undefined);
+      }
+
+      var res = v.value;
+      if (node.value in res) {
+        return res[node.value];
+      }
+      
+      err = {t: "V_DEREF_FAILED", o: "Could not find attribute: " + node.value + " on type " + v.type};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+      return newVariant(VAR_UNDEFINED, undefined);
+      break;
+
     case AST_IDENTIFIER:
       if (node.value in outputContext.globalVars) {
         return outputContext.globalVars[node.value];
       }
+      err = {t: "V_NOT_FOUND", o: "Could not find global: " + node.value};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
       return newVariant(VAR_UNDEFINED, undefined);
       break;
 
@@ -75,11 +98,20 @@ function newVariant(typ, value){
 function newOutputContext(){
   var ret = new Object();
   ret.globalVars = {};
-  ret.functionHandlers = {};
-  ret.functionHandlers['debugparams'] = function(outputContext, unordered, ordered){
+  ret.functionHandlers = defaultFunctionHandlers();
+  ret.errors = [];
+  return ret
+}
+
+
+function defaultFunctionHandlers(){
+  var funcs = {};
+  funcs.debugparams = function(outputContext, unordered, ordered){
     console.log("PARAM DEBUG:", unordered, ordered);
     return newVariant(VAR_UNDEFINED, undefined);
   }
-  ret.errors = [];
-  return ret
+  funcs.obj = function(outputContext, unordered, ordered){
+    return newVariant(VAR_OBJECT, ordered);
+  }
+  return funcs;
 }
