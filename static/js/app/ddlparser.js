@@ -75,8 +75,9 @@ function recursiveParse( tokenSet, tokenPosition) {
 				var retNode = newNode(AST_DESCRIPTOR);
 				i += 2;
 				while ((i < tokenSet.length) && (tokenSet[i].ttype != TOKEN_CLOSING_PARENTHESIS)){//call recursive_parse until we hit closing parenthesis
+					console.log("STARTING ", i, tokenSet[i]);
 					var r = recursiveParse(tokenSet, i);
-					i = r.pos + 1;
+					i = r.pos + ((tokenSet[i].ttype == TOKEN_KEY)? -1 : 0);
 					if (r.nonLinearPrecedence) { //we need to wrap the last AST element in the new one.
 						var prevNode = retNode.fetchForNonLinearPrecedence();
 						if (retNode.lastName == null) {//unordered entry
@@ -92,7 +93,7 @@ function recursiveParse( tokenSet, tokenPosition) {
 				}
 
 				retNode.value = descriptor_name;
-				return {obj: retNode, pos: i, nodeName: null};
+				return {obj: retNode, pos: i+1, nodeName: null};
 			} else if( ((i+1) < tokenSet.length) && (tokenSet[i+1].ttype == TOKEN_ASSIGN)) {//assignment
 				var descriptor_name = tokenSet[i].param;
 				var retNode = newNode(AST_ASSIGNMENT);
@@ -100,7 +101,7 @@ function recursiveParse( tokenSet, tokenPosition) {
 
 				while ((i < tokenSet.length) && ((tokenSet[i].ttype != TOKEN_CLOSING_PARENTHESIS) && (tokenSet[i].ttype != TOKEN_NEWLINE))){//call recursive_parse until we hit closing parenthesis
 					var r = recursiveParse(tokenSet, i);
-					i = r.pos + 1;
+					i = r.pos;
 					if (r.nonLinearPrecedence) { //we need to wrap the last AST element in the new one.
 						var prevNode = retNode.fetchForNonLinearPrecedence();
 						if (retNode.lastName == null) {//unordered entry
@@ -116,24 +117,24 @@ function recursiveParse( tokenSet, tokenPosition) {
 				}
 
 				retNode.value = descriptor_name;
-				return {obj: retNode, pos: i, nodeName: null};
+				return {obj: retNode, pos: i+1, nodeName: null};
 			} else { //not a function call, must be a literal
 				var retNode = newNode(AST_IDENTIFIER);
 				retNode.value = tokenSet[i].param;
-				return {obj: retNode, pos: i, nodeName: null};
+				return {obj: retNode, pos: i+1, nodeName: null};
 			}
 		}
 
 		else if (tokenSet[i].ttype == TOKEN_NUMBER) {
 			var retNode = newNode(AST_NUMBER_LIT);
 			retNode.value = tokenSet[i].param;
-			return {obj: retNode, pos: i, nodeName: null};
+			return {obj: retNode, pos: i+1, nodeName: null};
 		}
 
 		else if (tokenSet[i].ttype == TOKEN_STRING) {
 			var retNode = newNode(AST_STRING_LIT);
 			retNode.value = tokenSet[i].param;
-			return {obj: retNode, pos: i, nodeName: null};
+			return {obj: retNode, pos: i+1, nodeName: null};
 		}
 
 		else if (tokenSet[i].ttype == TOKEN_KEY) {
@@ -143,17 +144,17 @@ function recursiveParse( tokenSet, tokenPosition) {
 			var r = recursiveParse(tokenSet, i); //call recursive parse to parse the value
 			i = r.pos;
 			retNode.add(r.nodeName, r.obj);
-			return {obj: retNode, pos: i, nodeName: keyName};
+			return {obj: retNode, pos: i+1, nodeName: keyName};
 		}
 
 		else if (tokenSet[i].ttype == TOKEN_DEREF) {
 			var retNode = newNode(AST_DEREF);
 			retNode.value = tokenSet[i].param;
-			return {obj: retNode, pos: i, nodeName: null, nonLinearPrecedence: true};
+			return {obj: retNode, pos: i+1, nodeName: null, nonLinearPrecedence: true};
 		}
 
 		else if (tokenSet[i].ttype == TOKEN_SEPARATOR) {
-			return {obj: null, pos: i, nodeName: null};
+			return {obj: null, pos: i+1, nodeName: null};
 		}else if (tokenSet[i].ttype == TOKEN_NEWLINE) {
 			return {obj: null, pos: i+1, nodeName: null};
 		} else {
