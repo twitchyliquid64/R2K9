@@ -154,6 +154,11 @@ function recursiveParse( tokenSet, tokenPosition) {
 
 		else if (tokenSet[i].ttype == TOKEN_SEPARATOR) {
 			return {obj: null, pos: i, nodeName: null};
+		}else if (tokenSet[i].ttype == TOKEN_NEWLINE) {
+			return {obj: null, pos: i+1, nodeName: null};
+		} else {
+			console.log("Parse hit unparsed token: ", tokenSet[i]);
+			return {obj: null, pos: i+1, nodeName: null};
 		}
 
 	}
