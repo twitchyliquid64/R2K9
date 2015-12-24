@@ -28,6 +28,9 @@
           if (node.nodeName == AST_IDENTIFIER){
             out.nodeName = String(node.value) +  " (variable reference)";
           }
+          if (node.nodeName == AST_DEREF){
+            out.nodeName = String(node.value) +  " (dereference)";
+          }
 
           for(var i = 0; i < node.unnamedChildren.length; i++) {
             out.children[out.children.length] = self.parseIntoTreeNode(node.unnamedChildren[i]);

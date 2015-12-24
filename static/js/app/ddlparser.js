@@ -10,6 +10,7 @@ var AST_STRING_LIT = "STRING";
 var AST_IDENTIFIER = "IDENTIFIER";
 var AST_KEY_VAL_LIT = "KEY_VAL";
 var AST_ASSIGNMENT = "ASSIGN";
+var AST_DEREF = "DEREF";
 
 
 function newNode(name){
@@ -17,8 +18,11 @@ function newNode(name){
 	ret.namedChildren = {};
 	ret.unnamedChildren = [];
 	ret.nodeName = name;
+
+	ret.lastName = null;
 	ret.add = function(name, node){
 		if (node == null)return;
+		ret.lastName = name;
 		if(name == null){
 			ret.unnamedChildren[ret.unnamedChildren.length] = node;
 		} else {
@@ -27,6 +31,14 @@ function newNode(name){
 	}
 	ret.exec = function(outputContext){
 		ddlExec(outputContext, this);
+	}
+	ret.fetchForNonLinearPrecedence = function(){
+		if (ret.lastName == null){
+			return ret.unnamedChildren.pop();
+		}
+		var t = ret.namedChildren[ret.lastName];
+		//delete ret.namedChildren[ret.lastName];
+		return t;
 	}
 	return ret;
 }
@@ -41,10 +53,10 @@ function run(){
 function ddlParse(toks) {
 	var rootNode = newNode(AST_ROOT);
 	var i = 0;
+
 	while (i < toks.length) {
 		var n = recursiveParse(toks, i);
 		if (n != null && n != undefined) {
-			console.log(n);
 			rootNode.add(n.nodeName, n.obj);
 			i = n.pos;
 		} else {
@@ -65,8 +77,20 @@ function recursiveParse( tokenSet, tokenPosition) {
 				while ((i < tokenSet.length) && (tokenSet[i].ttype != TOKEN_CLOSING_PARENTHESIS)){//call recursive_parse until we hit closing parenthesis
 					var r = recursiveParse(tokenSet, i);
 					i = r.pos + 1;
-					retNode.add(r.nodeName, r.obj);
+					if (r.nonLinearPrecedence) { //we need to wrap the last AST element in the new one.
+						var prevNode = retNode.fetchForNonLinearPrecedence();
+						if (retNode.lastName == null) {//unordered entry
+							r.obj.add(retNode.lastName, prevNode);
+						} else {//named entry - add it to child KEY_VAL
+							var containerNode = prevNode.fetchForNonLinearPrecedence();
+							oldName = prevNode.lastName;
+							prevNode.add(containerNode.lastName, r.obj);
+							r.obj.add(oldName, containerNode);
+						}
+					}
+					if (retNode.lastName == null || !r.nonLinearPrecedence)retNode.add(r.nodeName, r.obj);
 				}
+
 				retNode.value = descriptor_name;
 				return {obj: retNode, pos: i, nodeName: null};
 			} else if( ((i+1) < tokenSet.length) && (tokenSet[i+1].ttype == TOKEN_ASSIGN)) {//assignment
@@ -74,9 +98,22 @@ function recursiveParse( tokenSet, tokenPosition) {
 				var retNode = newNode(AST_ASSIGNMENT);
 				i += 2;
 
-				var r = recursiveParse(tokenSet, i);
-				i = r.pos + 1;
-				retNode.add(r.nodeName, r.obj);
+				while ((i < tokenSet.length) && ((tokenSet[i].ttype != TOKEN_CLOSING_PARENTHESIS) && (tokenSet[i].ttype != TOKEN_NEWLINE))){//call recursive_parse until we hit closing parenthesis
+					var r = recursiveParse(tokenSet, i);
+					i = r.pos + 1;
+					if (r.nonLinearPrecedence) { //we need to wrap the last AST element in the new one.
+						var prevNode = retNode.fetchForNonLinearPrecedence();
+						if (retNode.lastName == null) {//unordered entry
+							r.obj.add(retNode.lastName, prevNode);
+						} else {//named entry - add it to child KEY_VAL
+							var containerNode = prevNode.fetchForNonLinearPrecedence();
+							oldName = prevNode.lastName;
+							prevNode.add(containerNode.lastName, r.obj);
+							r.obj.add(oldName, containerNode);
+						}
+					}
+					if (retNode.lastName == null || !r.nonLinearPrecedence)retNode.add(r.nodeName, r.obj);
+				}
 
 				retNode.value = descriptor_name;
 				return {obj: retNode, pos: i, nodeName: null};
@@ -107,6 +144,12 @@ function recursiveParse( tokenSet, tokenPosition) {
 			i = r.pos;
 			retNode.add(r.nodeName, r.obj);
 			return {obj: retNode, pos: i, nodeName: keyName};
+		}
+
+		else if (tokenSet[i].ttype == TOKEN_DEREF) {
+			var retNode = newNode(AST_DEREF);
+			retNode.value = tokenSet[i].param;
+			return {obj: retNode, pos: i, nodeName: null, nonLinearPrecedence: true};
 		}
 
 		else if (tokenSet[i].ttype == TOKEN_SEPARATOR) {

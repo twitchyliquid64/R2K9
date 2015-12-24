@@ -7,6 +7,8 @@ var TOKEN_CLOSING_PARENTHESIS = ")";
 var TOKEN_SEPARATOR = ",";
 var TOKEN_KEY = "KEY";
 var TOKEN_ASSIGN = "ASSIGN";
+var TOKEN_DEREF = "DEREF";
+var TOKEN_NEWLINE = "NL";
 
 function newTokenObject(tokenType, tokenParam, keys){
 	var ret = new Object();
@@ -89,6 +91,17 @@ function lex(rawContent){
 			outputTokens[outputTokens.length] = newTokenObject(TOKEN_CLOSING_PARENTHESIS, ")");
 		} else if (rawContent[i] == TOKEN_SEPARATOR) {
 			outputTokens[outputTokens.length] = newTokenObject(TOKEN_SEPARATOR, ",");
+		} else if (rawContent[i] == '\n') {
+			outputTokens[outputTokens.length] = newTokenObject(TOKEN_NEWLINE, "NL");
+		} else if (rawContent[i] == ".") {
+			i++;
+			var buff = "";
+			while ((i < rawContent.length) && (isLetter(rawContent[i]))) {
+				buff += rawContent[i];
+				i++;
+			}
+			i--;
+			outputTokens[outputTokens.length] = newTokenObject(TOKEN_DEREF, buff);
 		} else if ((rawContent[i] == ":") && (rawContent[i+1] == "=")) {
 			outputTokens[outputTokens.length] = newTokenObject(TOKEN_ASSIGN, "=");
 			i++;
