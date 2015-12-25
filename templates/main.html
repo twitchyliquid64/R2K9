@@ -29,17 +29,31 @@
         <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" style="padding-left: 22px;">
         <md-list>
           <md-subheader class="md-no-sticky">Main</md-subheader>
+
+          <md-list-item>
+            <md-button style="text-align:left" ng-click="mainC.activate('designer')">
+                <md-icon md-font-library="material-icons">settings_applications</md-icon> Designer
+            </md-button>
+          </md-list-item>
+
+
+          <md-list-item>
+            <md-button style="text-align:left" ng-click="mainC.activate('docs')">
+                <md-icon md-font-library="material-icons">code</md-icon> Documentation
+            </md-button>
+          </md-list-item>
+
           <md-subheader class="md-no-sticky">Debugging</md-subheader>
 
           <md-list-item>
-            <md-button style="text-align:left" ng-click="mainC.activate('main')">
-                <md-icon md-font-library="material-icons">code</md-icon> Parse Debugger
+            <md-button style="text-align:left" ng-click="mainC.activate('parse_debug')">
+                <md-icon md-font-library="material-icons">filter_list</md-icon> Parse Debugger
             </md-button>
           </md-list-item>
 
           <md-list-item>
             <md-button style="text-align:left" ng-click="mainC.activate('eval')">
-                <md-icon md-font-library="material-icons">storage</md-icon> Eval Debugger
+                <md-icon md-font-library="material-icons">bug_report</md-icon> Eval Debugger
             </md-button>
           </md-list-item>
         </md-list>
@@ -48,14 +62,33 @@
         <!-- line by line container for main content -->
         <div layout="column" flex="99" id="content">
 
-          <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'main'" ng-controller="parseDebugController">
+          <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'docs'" ng-controller="documentationController">
+              <h1 flex="5">Documentation</h1>
+
+              <div layout="column" flex>
+                <h2 flex="5">Syntactic features</h1>
+              </div>
+
+              <div layout="column" flex>
+                <h2 flex="5">Builtin Reference</h1>
+
+                <div layout="column" ng-repeat="(name, data) in dynamicDocumentation">
+                  <h3 flex="5"><md-icon md-font-library="material-icons">functions</md-icon> {{name}}</h3>
+                  <p><i>{{data.type}}</i></p>
+                  <p>{{data.desc}}</p>
+                  <pre>{{data.example}}</pre>
+                </div>
+              </div>
+          </md-content>
+
+          <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'parse_debug'" ng-controller="parseDebugController">
               <h1 flex="5">Parse debugger</h1>
 
               <div layout="row" flex>
                 <div layout="column" flex="60">
                   <textarea rows="20" columns="15" id="rawcontent_parse"></textarea>
 
-                  <button ng-click="execute()" flex="8"> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
+                  <button ng-click="execute()" > <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
                   <div flex></div>
                 </div>
 
@@ -80,7 +113,7 @@
                 <div layout="column" flex="60">
                   <textarea rows="20" columns="15" id="rawcontent_eval"></textarea>
 
-                  <button ng-click="execute()" flex="8"> <md-icon md-font-library="material-icons">memory</md-icon> Parse</button>
+                  <button ng-click="execute()" > <md-icon md-font-library="material-icons">code</md-icon> Execute</button>
                   <div flex></div>
                 </div>
 
@@ -121,6 +154,7 @@
     <!-- Module peripherals can come after in any order -->
     <script src="/static/js/app/parseDebugController.js"></script>
     <script src="/static/js/app/evalDebugController.js"></script>
+    <script src="/static/js/app/documentationController.js"></script>
     <script src="/static/js/app/mainController.js"></script>
 
   </body>

@@ -9,7 +9,7 @@ def dummy():
 
 
 def indexPage(response):
-    response.write(TemplateAPI.render('test.html', response, {}))
+    response.write(TemplateAPI.render('main.html', response, {}))
 
 
 server = Server('0.0.0.0', 80)

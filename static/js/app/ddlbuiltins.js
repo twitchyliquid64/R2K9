@@ -1,5 +1,4 @@
 
-var ddlDocumentationObjects = {};
 
 
 function defaultFunctionHandlers(){
@@ -41,3 +40,6 @@ function defaultFunctionHandlers(){
   }
   return funcs;
 }
+
+var ddlDocumentationObjects = {};
+defaultFunctionHandlers(); //call it to populate the documentation cache
