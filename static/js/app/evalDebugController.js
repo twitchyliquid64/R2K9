@@ -20,7 +20,7 @@
                 c[c.length] = self.readVariantIntoTreeNode(variant.value[key], key);
               }
             }
-            return {'children': c, 'n': name + " (object)"};
+            return {'collapsed': true, 'children': c, 'n': name + " (object)"};
           }
           if (variant.type == VAR_UNDEFINED){
             return {'children': [], 'n': name + " = UNDEFINED"};

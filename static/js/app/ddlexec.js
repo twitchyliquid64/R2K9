@@ -33,7 +33,7 @@ function ddlExec(outputContext, node){
       if (node.value in res) {
         return res[node.value];
       }
-      
+
       err = {t: "V_DEREF_FAILED", o: "Could not find attribute: " + node.value + " on type " + v.type};
       outputContext.errors[outputContext.errors.length] = err;
       console.error(err.t, err.o);
@@ -101,17 +101,4 @@ function newOutputContext(){
   ret.functionHandlers = defaultFunctionHandlers();
   ret.errors = [];
   return ret
-}
-
-
-function defaultFunctionHandlers(){
-  var funcs = {};
-  funcs.debugparams = function(outputContext, unordered, ordered){
-    console.log("PARAM DEBUG:", unordered, ordered);
-    return newVariant(VAR_UNDEFINED, undefined);
-  }
-  funcs.obj = function(outputContext, unordered, ordered){
-    return newVariant(VAR_OBJECT, ordered);
-  }
-  return funcs;
 }
