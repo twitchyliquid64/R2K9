@@ -85,6 +85,7 @@ function defaultFunctionHandlers(){
                                                   {x: bottomLeft.x.value, y: bottomLeft.y.value},]);
     outputContext.addPath(name, path);
     return newVariant(VAR_OBJECT, {
+      isRectangle: newVariant(VAR_NUMBER, 1),
       name: newVariant(VAR_STRING, name),
       width: newVariant(VAR_NUMBER, width),
       height: newVariant(VAR_NUMBER, height),
@@ -93,6 +94,12 @@ function defaultFunctionHandlers(){
       bottomLeft: newVariant(VAR_OBJECT, bottomLeft),
       bottomRight: newVariant(VAR_OBJECT, bottomRight)
     });
+  }
+  ddlDocumentationObjects['rectangle'] = {
+    type: 'builtin-function',
+    name: 'rectangle',
+    desc: 'This function draws a rectangle on the output document. Width and height must be specified as integers, along with x and y of one of the four corners of the rectangle.',
+    example: 'rectangle(width: 10, height: 10, topLeft: point(10,10))\nrectangle(width: 10, height: 10, bottomRight: point(10,10))'
   }
 
   return funcs;
