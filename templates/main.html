@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/static/css/angular-material.min.css">
     <link rel="stylesheet" href="/static/css/r2k9.css">
     <link rel="stylesheet" href="/static/css/treeview.css">
+    <link rel="stylesheet" href="/static/css/codemirror.css">
     <link rel="stylesheet" href="/static/fonts/roboto.css">
     <link rel="stylesheet" href="/static/fonts/material-icons/materialicons.css">
     <meta name="viewport" content="initial-scale=1" />
@@ -61,6 +62,37 @@
 
         <!-- line by line container for main content -->
         <div layout="column" flex="99" id="content">
+
+          <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'designer'" ng-controller="designerController">
+            <h2 flex="5">Object Designer</h1>
+
+              <div layout="row" flex>
+                <div layout="column" flex="60">
+                  <div flex="90" layout-fill>
+                    <md-subheader class="md-no-sticky">DDL Code</md-subheader>
+                    <div id="content_main"></div>
+                  </div>
+                </div>
+
+                <div layout="column" flex="89">
+                  <md-subheader class="md-no-sticky">Render Preview</md-subheader>
+                  <div style="text-align: center;" ng-show="isDirty">
+                    Render preview is out of date! Press <i>Ctrl-R</i> in the editor to rebuild the preview.
+                  </div>
+                  <div ng-hide="isDirty">
+                    <div  ng-show="hasErrors">
+                      <md-list>
+                        <md-list-item ng-repeat="error in errors">
+                          <span class="amber" style="margin-right: 6px">{{error.t}}</span> {{error.o}}
+                        </md-list-item>
+                      </md-list>
+                    </div>
+                    <div ng-hide="hasErrors">
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </md-content>
 
           <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'docs'" ng-controller="documentationController">
               <h1 flex="5">Documentation</h1>
@@ -141,6 +173,8 @@
     <script src="/static/js/angular/angular-material.min.js"></script>
     <script src="/static/js/angular/angular-dragdrop.min.js"></script>
     <script src="/static/js/angular/treeview.js"></script>
+    <script src="/static/js/codemirror.js"></script>
+    <script src="/static/js/codemirrormodes/javascript.js"></script>
 
     <!-- Base App Dependencies -->
 
@@ -155,6 +189,7 @@
     <script src="/static/js/app/parseDebugController.js"></script>
     <script src="/static/js/app/evalDebugController.js"></script>
     <script src="/static/js/app/documentationController.js"></script>
+    <script src="/static/js/app/designerController.js"></script>
     <script src="/static/js/app/mainController.js"></script>
 
   </body>

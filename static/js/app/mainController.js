@@ -6,7 +6,7 @@
     function mainController($mdSidenav) {
         var self = this;
 
-        self.focus = 'parse_debug';
+        self.focus = 'designer';
 
         self.activate = function (element) {
             self.focus = element;
