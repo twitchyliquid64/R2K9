@@ -100,5 +100,21 @@ function newOutputContext(){
   ret.globalVars = {};
   ret.functionHandlers = defaultFunctionHandlers();
   ret.errors = [];
+
+  ret.lastIssuedID = 0;
+  ret.newID = function(){
+    ret.lastIssuedID++;
+    return ret.lastIssuedID;
+  }
+  ret.addPath = function(name, opList){
+    if (name in ret.paths){
+      for (var i = 0; i < opList.length; i++)
+        ret.paths[name][ret.paths[name].length] = opList[i];
+    } else {
+      ret.paths[name] = opList;
+    }
+  }
+
+  ret.paths = {};
   return ret
 }
