@@ -87,7 +87,9 @@
                         </md-list-item>
                       </md-list>
                     </div>
-                    <div ng-hide="hasErrors">
+                    <div flex ng-hide="hasErrors">
+                      <div style="max-height: 650px;" layout-fill id="renderPreviewContainer">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -184,6 +186,8 @@
     <script src="/static/js/app/ddlparser.js"></script>
     <script src="/static/js/app/ddlexec.js"></script>
     <script src="/static/js/app/ddlbuiltins.js"></script>
+    <script src="/static/js/app/ddlrender.js"></script>
+    <script src="/static/js/app/svgddlrenderer.js"></script>
 
     <!-- Module peripherals can come after in any order -->
     <script src="/static/js/app/parseDebugController.js"></script>

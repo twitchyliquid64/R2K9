@@ -1,3 +1,9 @@
+function showSvgInDiv(id, svg) {
+    var element = document.getElementById(id);
+    element.innerHTML = svg;
+}
+
+
 (function () {
 
     angular.module('baseApp')
@@ -37,6 +43,9 @@
           $scope.errors = ctx.errors;
           if (ctx.errors.length > 0) {
             $scope.hasErrors = true;
+          } else {
+            var svg = ddlRenderTargets['svg'](ctx, {preview: true});
+            showSvgInDiv("renderPreviewContainer", svg);
           }
           $scope.isDirty = false;
         }
