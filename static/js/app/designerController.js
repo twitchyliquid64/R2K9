@@ -40,6 +40,7 @@ function showSvgInDiv(id, svg) {
         	var rootNode = ddlParse(toks);
           var ctx = newOutputContext();
           rootNode.exec(ctx);
+
           $scope.errors = ctx.errors;
           if (ctx.errors.length > 0) {
             $scope.hasErrors = true;
@@ -49,6 +50,17 @@ function showSvgInDiv(id, svg) {
             showSvgInDiv("renderPreviewContainer", svg);
           }
           $scope.isDirty = false;
+        }
+
+        $scope.fileSVG = function(){
+          var toks = lex(self.editor.getValue());
+        	var rootNode = ddlParse(toks);
+          var ctx = newOutputContext();
+          rootNode.exec(ctx);
+          var svg = ddlRenderTargets['svg'](ctx, {preview: false});
+
+          var blob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
+          saveAs(blob, ctx.name + ".svg");
         }
     }
 })();

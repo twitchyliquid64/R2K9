@@ -161,6 +161,7 @@ function generateJSExecContextCode(globals) {
 
 function newOutputContext(){
   var ret = new Object();
+  ret.name = "unnamed drawing";
   ret.globalVars = {};
   ret.functionHandlers = defaultFunctionHandlers();
   ret.errors = [];

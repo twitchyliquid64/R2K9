@@ -61,9 +61,7 @@ function genSvgForPath(bounds, options, path, pathName){
   }
 
   s += '"'
-  if (options.preview == true) {
-    s += ' stroke="black" fill="transparent" '
-  }
+  s += ' stroke="black" fill="none" stroke-width="1" id="' + pathName + '"'
   s += ' />\n';
 
   return s;

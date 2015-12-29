@@ -40,6 +40,24 @@ function defaultFunctionHandlers(){
   }
 
 
+  // ========= BUILTIN-FUNCTION: name(<document name>) =========
+  funcs.name = function(outputContext, unordered, ordered){
+    if (unordered.length != 1 || unordered[0].type != VAR_STRING) {
+      err = {t: "PARAM_ERROR", o: "invalid parameters in call to name()"};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+    } else {
+      outputContext.name = unordered[0].value;
+    }
+    return newVariant(VAR_UNDEFINED, undefined);
+  }
+  ddlDocumentationObjects['name'] = {
+    type: 'builtin-function',
+    name: 'name',
+    desc: 'This function allows you to set the human-readable name of the output document.',
+    example: 'name("yah mum")'
+  }
+
 
   // ========= BUILTIN-FUNCTION: rectangle(...) =========
   funcs.rectangle = function(outputContext, unordered, ordered){
