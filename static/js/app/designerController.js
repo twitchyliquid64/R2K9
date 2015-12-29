@@ -44,6 +44,7 @@ function showSvgInDiv(id, svg) {
           if (ctx.errors.length > 0) {
             $scope.hasErrors = true;
           } else {
+            $scope.hasErrors = false;
             var svg = ddlRenderTargets['svg'](ctx, {preview: true});
             showSvgInDiv("renderPreviewContainer", svg);
           }

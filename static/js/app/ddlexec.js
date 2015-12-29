@@ -1,3 +1,5 @@
+//TODO: FOR loops, IF statements.
+
 function ddlExec(outputContext, node){
   console.log("ddlExec()", node.nodeName);
 
@@ -50,6 +52,26 @@ function ddlExec(outputContext, node){
       return newVariant(VAR_UNDEFINED, undefined);
       break;
 
+    case AST_JS_EXP:
+      var exp = generateJSExecContextCode(outputContext.globalVars);
+      exp += '\nreturn ' + node.value + ';';
+      var result = new Function(exp)();
+
+      switch (typeof result){
+        case 'number':
+          return newVariant(VAR_NUMBER, result);
+        case 'string':
+          return newVariant(VAR_STRING, result);
+        case 'boolean':
+          return newVariant(VAR_NUMBER, Number(result));
+        default:
+          err = {t: "EXP_ERR", o: "Unable to process expression"};
+          outputContext.errors[outputContext.errors.length] = err;
+          console.error(err.t, err.o);
+          return newVariant(VAR_UNDEFINED, undefined);
+      }
+      break;
+
     case AST_KEY_VAL_LIT: //lightweight wrapper around another value - just recurse.
       return ddlExec(outputContext, node.unnamedChildren[0]);
 
@@ -94,6 +116,48 @@ function newVariant(typ, value){
   return ret;
 }
 
+function generateJSLiteralFromVariant(v){
+  var output = '';
+  switch (v.type) {
+    case VAR_NUMBER:
+      output += '' + v.value;
+      break;
+    case VAR_STRING:
+      output += '\'' + v.value + '\'';
+      break;
+    case VAR_UNDEFINED:
+      output += 'undefined';
+      break;
+    case VAR_OBJECT:
+      output += '{';
+      var didRun = false;
+      for (var key in v.value) {
+        if (v.value.hasOwnProperty(key)){
+          output += '\'' + key + '\': ';
+          output += generateJSLiteralFromVariant(v.value[key]) + ', ';
+          didRun = true;
+        }
+      }
+
+      if (didRun) {
+        output = output.substring(0, output.length - 2);
+      }
+      output += '}';
+  }
+  return output;
+}
+
+function generateJSExecContextCode(globals) {
+  var output = '';
+  for (var key in globals) {
+    if (globals.hasOwnProperty(key)){
+      var v = globals[key];
+      output += 'var ' + key + ' = ';
+      output += generateJSLiteralFromVariant(v) + ';\n'
+    }
+  }
+  return output;
+}
 
 function newOutputContext(){
   var ret = new Object();

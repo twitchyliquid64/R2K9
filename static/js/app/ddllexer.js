@@ -9,6 +9,7 @@ var TOKEN_KEY = "KEY";
 var TOKEN_ASSIGN = "ASSIGN";
 var TOKEN_DEREF = "DEREF";
 var TOKEN_NEWLINE = "NL";
+var TOKEN_JSEXP = "JS_EXP";
 
 function newTokenObject(tokenType, tokenParam, keys){
 	var ret = new Object();
@@ -105,7 +106,15 @@ function lex(rawContent){
 		} else if ((rawContent[i] == ":") && (rawContent[i+1] == "=")) {
 			outputTokens[outputTokens.length] = newTokenObject(TOKEN_ASSIGN, "=");
 			i++;
-		} else {
+		} else if (rawContent[i] == "[") {
+			var exp = '';
+			i++;
+			while ((i < rawContent.length) && (rawContent[i] != ']')) {
+				exp += rawContent[i];
+				i++;
+			}
+			outputTokens[outputTokens.length] = newTokenObject(TOKEN_JSEXP, exp);
+		}else {
 			console.log("Unparsed character:", rawContent[i]);
 		}
 	}

@@ -11,7 +11,7 @@ var AST_IDENTIFIER = "IDENTIFIER";
 var AST_KEY_VAL_LIT = "KEY_VAL";
 var AST_ASSIGNMENT = "ASSIGN";
 var AST_DEREF = "DEREF";
-
+var AST_JS_EXP = "JS_EXP";
 
 function newNode(name){
 	var ret = new Object();
@@ -155,6 +155,10 @@ function recursiveParse( tokenSet, tokenPosition) {
 
 		else if (tokenSet[i].ttype == TOKEN_SEPARATOR) {
 			return {obj: null, pos: i+1, nodeName: null};
+		}else if (tokenSet[i].ttype == TOKEN_JSEXP) {
+			var retNode = newNode(AST_JS_EXP);
+			retNode.value = tokenSet[i].param;
+			return {obj: retNode, pos: i+1, nodeName: null};
 		}else if (tokenSet[i].ttype == TOKEN_NEWLINE) {
 			return {obj: null, pos: i+1, nodeName: null};
 		} else {

@@ -31,6 +31,9 @@
           if (node.nodeName == AST_DEREF){
             out.nodeName = String(node.value) +  " (dereference)";
           }
+          if (node.nodeName == AST_JS_EXP){
+            out.nodeName = "JS: " + String(node.value);
+          }
 
           for(var i = 0; i < node.unnamedChildren.length; i++) {
             out.children[out.children.length] = self.parseIntoTreeNode(node.unnamedChildren[i]);
