@@ -62,5 +62,16 @@ function showSvgInDiv(id, svg) {
           var blob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
           saveAs(blob, ctx.name + ".svg");
         }
+
+        $scope.fileDXF = function(){
+          var toks = lex(self.editor.getValue());
+          var rootNode = ddlParse(toks);
+          var ctx = newOutputContext();
+          rootNode.exec(ctx);
+          var svg = ddlRenderTargets['dxf'](ctx, {preview: false});
+
+          var blob = new Blob([svg], {type: "application/dxf;charset=utf-8"});
+          saveAs(blob, ctx.name + ".dxf");
+        }
     }
 })();

@@ -29,7 +29,7 @@
 		<!-- sidenav -->
         <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" style="padding-left: 22px;">
         <md-list>
-          <md-subheader class="md-no-sticky">Main</md-subheader>
+          <md-subheader class="md-no-sticky">DDL Apps</md-subheader>
 
           <md-list-item>
             <md-button style="text-align:left" ng-click="mainC.activate('designer')">
@@ -44,7 +44,7 @@
             </md-button>
           </md-list-item>
 
-          <md-subheader class="md-no-sticky">Debugging</md-subheader>
+          <md-subheader class="md-no-sticky">DDL Debugging Tools</md-subheader>
 
           <md-list-item>
             <md-button style="text-align:left" ng-click="mainC.activate('parse_debug')">
@@ -55,6 +55,20 @@
           <md-list-item>
             <md-button style="text-align:left" ng-click="mainC.activate('eval')">
                 <md-icon md-font-library="material-icons">bug_report</md-icon> Eval Debugger
+            </md-button>
+          </md-list-item>
+
+          <md-subheader class="md-no-sticky">Maker.js Apps</md-subheader>
+
+          <md-list-item>
+            <md-button style="text-align:left" ng-click="mainC.activate('maker_designer')">
+                <md-icon md-font-library="material-icons">filter_list</md-icon> Designer
+            </md-button>
+          </md-list-item>
+
+          <md-list-item>
+            <md-button style="text-align:left" ng-click="mainC.activate('maker_designs')">
+                <md-icon md-font-library="material-icons">bug_report</md-icon> Saved Designs
             </md-button>
           </md-list-item>
         </md-list>
@@ -200,6 +214,7 @@
     <script src="/static/js/app/ddlbuiltins.js"></script>
     <script src="/static/js/app/ddlrender.js"></script>
     <script src="/static/js/app/svgddlrenderer.js"></script>
+    <script src="/static/js/app/dxfddlrenderer.js"></script>
 
     <!-- Module peripherals can come after in any order -->
     <script src="/static/js/app/parseDebugController.js"></script>
