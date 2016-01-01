@@ -20,6 +20,13 @@ function genDxfHeader(bounds, options){
   out += "$INSUNITS\n";
   out += "70\n";
   out += String(unit) + "\n";
+
+  //lmn-laser utility seems to do this:
+  out += "9\n"
+  out += "$MEASUREMENT\n";
+  out += "70\n";
+  out += "1\n";
+
   return dxf_wrapInputWithSectionDeclaration(out);
 }
 
