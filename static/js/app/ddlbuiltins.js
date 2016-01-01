@@ -59,6 +59,41 @@ function defaultFunctionHandlers(){
   }
 
 
+  // ========= BUILTIN-FUNCTION: circle(...) =========
+  funcs.circle = function(outputContext, unordered, ordered){
+    var name = getName(ordered, outputContext, "circle");
+    var x = getVariantValueOrUndefined(ordered.x);
+    var y = getVariantValueOrUndefined(ordered.y);
+    var radius = getVariantValueOrUndefined(ordered.radius);
+
+    if(x == undefined || y == undefined || radius == undefined){
+      err = {t: "PARAM_ERROR", o: "x/y/radius missing or invalid in call to circle()"};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+      x = 10;
+      y = 10;
+      radius = 10;
+    }
+
+    outputContext.addPath(name, [{'type': 'circle', 'x': x, 'y': y, 'radius': radius}]);
+    return newVariant(VAR_OBJECT, {
+      isCircle: newVariant(VAR_NUMBER, 1),
+      name: newVariant(VAR_STRING, name),
+      x: newVariant(VAR_NUMBER, x),
+      y: newVariant(VAR_NUMBER, y),
+      radius: newVariant(VAR_NUMBER, radius),
+    });
+  };
+  ddlDocumentationObjects['circle'] = {
+    type: 'builtin-function',
+    name: 'circle',
+    desc: 'This function draws a circle on the output document. The named parameters x, y, and radius specify the center co-ordinates and the circle radius respectively.',
+    example: 'circle(x: 20, y: 40, radius: 5)'
+  }
+
+
+
+
   // ========= BUILTIN-FUNCTION: rectangle(...) =========
   funcs.rectangle = function(outputContext, unordered, ordered){
     var name = getName(ordered, outputContext, "rectangle");
@@ -122,6 +157,7 @@ function defaultFunctionHandlers(){
 
   return funcs;
 }
+
 
 function constructClosedPolylinePath(name, vertexList){
   var ret = [];

@@ -30,8 +30,13 @@ function parsePathsForMaxMin(execOutputContext) {
       for (var i = 0; i < path.length; i++) {
         switch (path[i].type) {
           case 'line':
-          checkCoord(path[i].startx, path[i].starty);
-          checkCoord(path[i].endx, path[i].endy);
+            checkCoord(path[i].startx, path[i].starty);
+            checkCoord(path[i].endx, path[i].endy);
+            break;
+          case 'circle':
+            checkCoord(path[i].x, path[i].y);
+            checkCoord(path[i].x + path[i].radius, path[i].y + path[i].radius);
+            checkCoord(path[i].x - path[i].radius, path[i].y - path[i].radius);
             break;
         }
       }

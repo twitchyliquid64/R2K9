@@ -57,6 +57,15 @@ function genSvgForPath(bounds, options, path, pathName){
         lastx = op.endx;
         lasty = op.endy;
         break;
+
+      case 'circle':
+        checkCoordLoc(op.x, op.y);
+        s += " m " + String(-1 * op.radius) + ", 0";
+        s += " a " + String(op.radius) + "," + String(op.radius) + " 0 1,1 " + String(op.radius * 2) + ",0";
+        s += " a " + String(op.radius) + "," + String(op.radius) + " 0 1,1 " + String(op.radius * -2) + ",0";
+        lastx = -342861243;
+        lasty = -324312432;
+        break;
     }
   }
 

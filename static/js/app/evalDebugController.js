@@ -9,8 +9,12 @@
         self.readOpIntoTreeNode = function(name, opList){
           var c = [];
           for (var i = 0; i < opList.length; i++) {
+            console.log(opList[i]);
             if (opList[i].type == 'line'){
               c[c.length] = {children: [], n: opList[i].type + ": (" + opList[i].startx + "," + opList[i].starty + ") -> (" + opList[i].endx + "," + opList[i].endy + ")"};
+            }
+            else if (opList[i].type == 'circle'){
+              c[c.length] = {children: [], n: opList[i].type + " Center: (" + opList[i].x + "," + opList[i].y + ") Radius: " + opList[i].radius};
             }
           }
           return c;

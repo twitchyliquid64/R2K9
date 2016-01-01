@@ -90,9 +90,9 @@
 
                 <div layout="column" flex="89">
                   <md-subheader class="md-no-sticky">Render Preview</md-subheader>
-                  <div style="text-align: center;" ng-show="isDirty">
-                    Render preview is out of date! Press <i>Ctrl-R</i> in the editor to rebuild the preview.
-                  </div>
+                    <div style="text-align: center;" ng-show="isDirty">
+                        Render preview is out of date! Press <i>Ctrl-R</i> in the editor to rebuild the preview.
+                    </div>
                   <div ng-hide="isDirty">
                     <div  ng-show="hasErrors">
                       <md-list>
@@ -203,6 +203,7 @@
     <script src="/static/js/codemirror.js"></script>
     <script src="/static/js/codemirrormodes/javascript.js"></script>
     <script src="/static/js/filesaver.min.js"></script>
+    <script src="/static/js/makerjs/browser.maker.js"></script>
 
     <!-- Base App Dependencies -->
 

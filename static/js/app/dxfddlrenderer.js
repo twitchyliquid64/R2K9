@@ -46,6 +46,20 @@ function genDxfEntityForPath(bounds, options, path, pathName){
         s += "21\n";
         s += String(op.endy) + "\n";
         break;
+
+      case 'circle':
+        s += '0\n';
+        s += "CIRCLE\n";
+        s += "8\n";
+        s += String(layer) + "\n";
+
+        s += "10\n";
+        s += String(op.x) + "\n";
+        s += "20\n";
+        s += String(op.y) + "\n";
+        s += "40\n";
+        s += String(op.radius) + "\n";
+        break;
     }
   }
 
