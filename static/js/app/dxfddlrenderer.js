@@ -85,6 +85,9 @@ function genDxfEntityForPath(bounds, options, path, pathName){
         sAng = (op.startAng + 270) % 361;
         eAng = (op.endAng + 270) % 361;
 
+        if ((op.startAng + 270) > 360)sAng += 1;
+        if ((op.endAng + 270) > 360)eAng += 1;
+
         s += "50\n";
         s += String(sAng) + "\n";
         s += "51\n";
