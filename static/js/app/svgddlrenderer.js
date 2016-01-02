@@ -1,3 +1,28 @@
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+  var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
+
+  return {
+    x: centerX + (radius * Math.cos(angleInRadians)),
+    y: centerY + (radius * Math.sin(angleInRadians))
+  };
+}
+
+function describeArc(x, y, radius, startAngle, endAngle){
+
+    var start = polarToCartesian(x, y, radius, endAngle);
+    var end = polarToCartesian(x, y, radius, startAngle);
+
+    var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+
+    var d = [
+        "M", start.x, start.y,
+        "A", radius, radius, 0, arcSweep, 0, end.x, end.y
+    ].join(" ");
+
+    return " " + d;
+}
+
+
 function genSvgHeader(bounds, options){
   var width = bounds.maxx - bounds.minx + 20;
   var height = bounds.maxy - bounds.miny + 20;
@@ -63,6 +88,12 @@ function genSvgForPath(bounds, options, path, pathName){
         s += " m " + String(-1 * op.radius) + ", 0";
         s += " a " + String(op.radius) + "," + String(op.radius) + " 0 1,1 " + String(op.radius * 2) + ",0";
         s += " a " + String(op.radius) + "," + String(op.radius) + " 0 1,1 " + String(op.radius * -2) + ",0";
+        lastx = -342861243;
+        lasty = -324312432;
+        break;
+
+      case 'arc':
+        s += describeArc(op.x, op.y, op.radius, op.startAng, op.endAng);
         lastx = -342861243;
         lasty = -324312432;
         break;

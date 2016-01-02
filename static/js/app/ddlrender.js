@@ -34,6 +34,7 @@ function parsePathsForMaxMin(execOutputContext) {
             checkCoord(path[i].endx, path[i].endy);
             break;
           case 'circle':
+          case 'arc':
             checkCoord(path[i].x, path[i].y);
             checkCoord(path[i].x + path[i].radius, path[i].y + path[i].radius);
             checkCoord(path[i].x - path[i].radius, path[i].y - path[i].radius);

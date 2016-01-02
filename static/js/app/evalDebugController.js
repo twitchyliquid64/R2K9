@@ -16,6 +16,9 @@
             else if (opList[i].type == 'circle'){
               c[c.length] = {children: [], n: opList[i].type + " Center: (" + opList[i].x + "," + opList[i].y + ") Radius: " + opList[i].radius};
             }
+            else if (opList[i].type == 'arc'){
+              c[c.length] = {children: [], n: opList[i].type + " Center: (" + opList[i].x + "," + opList[i].y + ") Radius: " + opList[i].radius + " Ang: " + opList[i].startAng + " -> " + opList[i].endAng};
+            }
           }
           return c;
         }

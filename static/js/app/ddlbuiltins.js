@@ -59,6 +59,77 @@ function defaultFunctionHandlers(){
   }
 
 
+  // ========= BUILTIN-FUNCTION: arc(...) =========
+  funcs.arc = function(outputContext, unordered, ordered){
+    var name = getName(ordered, outputContext, "arc");
+    var x = getVariantValueOrUndefined(ordered.x);
+    var y = getVariantValueOrUndefined(ordered.y);
+    var radius = getVariantValueOrUndefined(ordered.radius);
+    var startAng = getVariantValueOrUndefined(ordered.startAng);
+    var endAng = getVariantValueOrUndefined(ordered.endAng);
+
+    if (x == undefined || y == undefined || radius == undefined || startAng == undefined || endAng == undefined) {
+      err = {t: "PARAM_ERROR", o: "x/y/radius/startAng/endAng missing or invalid in call to arc()"};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+      x = 10;
+      y = 10;
+      radius = 10;
+      startAng = 10;
+      endAng = 20;
+    }
+
+    outputContext.addPath(name, [{'type': 'arc', 'x': x, 'y': y, 'radius': radius, 'startAng': startAng, 'endAng': endAng}]);
+    return newVariant(VAR_OBJECT, {
+      isArc: newVariant(VAR_NUMBER, 1),
+      name: newVariant(VAR_STRING, name),
+      x: newVariant(VAR_NUMBER, x),
+      y: newVariant(VAR_NUMBER, y),
+      radius: newVariant(VAR_NUMBER, radius),
+      startAng: newVariant(VAR_NUMBER, startAng),
+      endAng: newVariant(VAR_NUMBER, endAng)
+    });
+  };
+  ddlDocumentationObjects['arc'] = {
+    type: 'builtin-function',
+    name: 'arc',
+    desc: 'This function draws an arc on the output document. The named parameters x, y, and radius specify the center co-ordinates and the circle radius respectively. The start and finish of the arc is determined by the startAng and endAng parameters.',
+    example: 'arc(x: 20, y: 40, radius: 5, startAng: 0, endAng: 90)'
+  }
+
+
+
+  // ========= BUILTIN-FUNCTION: line(...) =========
+  funcs.line = function(outputContext, unordered, ordered){
+    var name = getName(ordered, outputContext, "line");
+    var start = getVariantValueOrUndefined(ordered.start);
+    var end = getVariantValueOrUndefined(ordered.end);
+
+    if(start == undefined || end == undefined){
+      err = {t: "PARAM_ERROR", o: "start/end missing or invalid in call to line()"};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+      start = {x: newVariant(VAR_NUMBER, 10), y: newVariant(VAR_NUMBER, 10)};
+      end = {x: newVariant(VAR_NUMBER, 20), y: newVariant(VAR_NUMBER, 20)};
+    }
+
+    outputContext.addPath(name, [{'type': 'line', startx: start.x.value, starty: start.y.value, endx: end.x.value, endy: end.y.value}]);
+    return newVariant(VAR_OBJECT, {
+      isLine: newVariant(VAR_NUMBER, 1),
+      name: newVariant(VAR_STRING, name),
+      start: newVariant(VAR_OBJECT, start),
+      end: newVariant(VAR_OBJECT, end)
+    });
+  };
+  ddlDocumentationObjects['line'] = {
+    type: 'builtin-function',
+    name: 'line',
+    desc: 'This function draws a line on the output document. The named parameters start and end specify the start and end points of the co-ordinates.',
+    example: 'line(start: point(0,0), end: point(30, 30))'
+  }
+
+
+
   // ========= BUILTIN-FUNCTION: circle(...) =========
   funcs.circle = function(outputContext, unordered, ordered){
     var name = getName(ordered, outputContext, "circle");

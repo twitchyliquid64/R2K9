@@ -67,6 +67,29 @@ function genDxfEntityForPath(bounds, options, path, pathName){
         s += "40\n";
         s += String(op.radius) + "\n";
         break;
+
+      case 'arc':
+        s += '0\n';
+        s += "ARC\n";
+        s += "8\n";
+        s += String(layer) + "\n";
+
+        s += "10\n";
+        s += String(op.x) + "\n";
+        s += "20\n";
+        s += String(op.y) + "\n";
+        s += "40\n";
+        s += String(op.radius) + "\n";
+
+        //recalc the angles because of the switch from a right-down to a right-up co-ordinate system.
+        sAng = (op.startAng + 270) % 361;
+        eAng = (op.endAng + 270) % 361;
+
+        s += "50\n";
+        s += String(sAng) + "\n";
+        s += "51\n";
+        s += String(eAng) + "\n";
+        break;
     }
   }
 
