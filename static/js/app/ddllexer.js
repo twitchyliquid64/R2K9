@@ -24,7 +24,7 @@ function isLetter(ch) {
 	var code = ch.charCodeAt(0);
 	if ( ((code >= 65) && (code <= 90)) || ((code >= 97) && (code <= 122)))
 		return true;
-	if (code == "-".charCodeAt(0))return true;
+	//if (code == "-".charCodeAt(0))return true;
   if (code == '_'.charCodeAt(0))return true;
 	return false;
 }
@@ -46,8 +46,15 @@ function lex(rawContent){
 
 	for (var i = 0; i < rawContent.length; i++) //loop through each character
 	{
-		if (!isNaN(parseFloat(rawContent[i]))) {	//if its not an invalid number (its a number)
+		console.log(i, rawContent[i]);
+		if ((!isNaN(parseFloat(rawContent[i]))) || (rawContent[i]=="-")) {	//if its not an invalid number (its a number) OR its a minus
 			var buff = "";
+
+			if (rawContent[i]=="-"){
+				buff = "-";
+				i++;
+			}
+
 			var isFloat = false;
 			while (!isNaN(parseFloat(rawContent[i]))) {
 				buff += rawContent[i];

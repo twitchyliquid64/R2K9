@@ -163,6 +163,23 @@ function defaultFunctionHandlers(){
   }
 
 
+  // ========= BUILTIN-FUNCTION: rectangle(...) =========
+  funcs.paraTab = paraTab;
+  ddlDocumentationObjects['paraTab'] = {
+    type: 'subset-function',
+    name: 'paraTab',
+    desc: 'This function is under development (alpha). Do not use unless you know what your doing.',
+    example: ''
+  }
+
+  // ========= BUILTIN-FUNCTION: rectangle(...) =========
+  funcs.parametricOutline = paraOutline;
+  ddlDocumentationObjects['parametricOutline'] = {
+    type: 'builtin-function',
+    name: 'parametricOutline',
+    desc: 'This function is under development (alpha). Do not use unless you know what your doing.',
+    example: ''
+  }
 
 
   // ========= BUILTIN-FUNCTION: rectangle(...) =========
