@@ -163,22 +163,22 @@ function defaultFunctionHandlers(){
   }
 
 
-  // ========= BUILTIN-FUNCTION: rectangle(...) =========
+  // ========= BUILTIN-FUNCTION: paraTab(...) =========
   funcs.paraTab = paraTab;
   ddlDocumentationObjects['paraTab'] = {
     type: 'subset-function',
     name: 'paraTab',
-    desc: 'This function is under development (alpha). Do not use unless you know what your doing.',
-    example: ''
+    desc: 'This function MUST be used in a call to parametricOutline(). It specifies a rectangular cutout/extension on a side of the rectangle. Displacement specifies the amount by which the rectangle should extend, negative values create a cutout. Length is the size of the cutout/extension on the same axis as the side, side is the side to apply the modification (top/bottom/left/right), and offset is the position from which to apply the modification. Negative values commence from the oppositve axis.',
+    example: 'paraTab(\n  	offset: -2,\n  	side: \'left\',\n  	displacement: 4,\n  	length: 5,\n  )'
   }
 
-  // ========= BUILTIN-FUNCTION: rectangle(...) =========
+  // ========= BUILTIN-FUNCTION: paraOutline(...) =========
   funcs.parametricOutline = paraOutline;
   ddlDocumentationObjects['parametricOutline'] = {
     type: 'builtin-function',
     name: 'parametricOutline',
-    desc: 'This function is under development (alpha). Do not use unless you know what your doing.',
-    example: ''
+    desc: 'Same as rectangle() except it allows you to specify modifications which are applied to a side of the basic rectangular shape. See paraTab() for such an example.',
+    example: 'parametricOutline(\n  width: 90,\n  height: 60,\n  topLeft: point(0,0),\n  paraTab(\n  	offset: 9,\n  	side: \'top\',\n  	displacement: -3,\n  	length: 4,\n  )\n)'
   }
 
 

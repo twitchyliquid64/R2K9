@@ -200,8 +200,16 @@ paraOutline = function(outputContext, unordered, ordered){
 
 
   outputContext.addPath(name, path);
-  return newVariant(VAR_UNDEFINED, undefined);
-}
+  return newVariant(VAR_OBJECT, {
+    isParametricOutline: newVariant(VAR_NUMBER, 1),
+    name: newVariant(VAR_STRING, name),
+    width: newVariant(VAR_NUMBER, width),
+    height: newVariant(VAR_NUMBER, height),
+    topLeft: newVariant(VAR_OBJECT, topLeft),
+    topRight: newVariant(VAR_OBJECT, topRight),
+    bottomLeft: newVariant(VAR_OBJECT, bottomLeft),
+    bottomRight: newVariant(VAR_OBJECT, bottomRight)
+  });}
 
 
 
