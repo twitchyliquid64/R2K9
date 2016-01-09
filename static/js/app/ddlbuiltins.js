@@ -181,6 +181,39 @@ function defaultFunctionHandlers(){
     example: 'parametricOutline(\n  width: 90,\n  height: 60,\n  topLeft: point(0,0),\n  paraTab(\n  	offset: 9,\n  	side: \'top\',\n  	displacement: -3,\n  	length: 4,\n  )\n)'
   }
 
+  // ========= BUILTIN-FUNCTION: rectangle(...) =========
+  funcs.regularPolygon = function(outputContext, unordered, ordered){
+    var name = getName(ordered, outputContext, "rectangle");
+    var sides = getVariantValueOrUndefined(ordered.sides);
+    var center = getVariantValueOrUndefined(ordered.center);
+    var radius = getVariantValueOrUndefined(ordered.radius);
+
+    if(sides == undefined || center == undefined || radius == undefined){
+      err = {t: "PARAM_ERROR", o: "sides/center/radius missing or invalid in call to regularPolygon()"};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+      sides = 6;
+      center = {x: newVariant(VAR_NUMBER, 10), y: newVariant(VAR_NUMBER, 10)};
+      radius = 3;
+    }
+
+    var vertices = [];
+    var angle = 2 * Math.PI / sides;
+    for (var i = 0; i < sides; i++) {
+      var x = center.x.value + radius * Math.cos(i * angle);
+      var y = center.y.value + radius * Math.sin(i * angle);
+      vertices[vertices.length] = {x: x, y: y};
+    }
+
+    var path = constructClosedPolylinePath(name, vertices);
+    outputContext.addPath(name, path);
+    return newVariant(VAR_OBJECT, {
+      isRegularPolygon: newVariant(VAR_NUMBER, 1),
+      center: newVariant(VAR_OBJECT, center),
+      radius: newVariant(VAR_NUMBER, radius),
+      sides: newVariant(VAR_NUMBER, sides)
+    })
+  }
 
   // ========= BUILTIN-FUNCTION: rectangle(...) =========
   funcs.rectangle = function(outputContext, unordered, ordered){

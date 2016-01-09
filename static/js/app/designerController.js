@@ -73,5 +73,7 @@ function showSvgInDiv(id, svg) {
           var blob = new Blob([svg], {type: "application/dxf;charset=utf-8"});
           saveAs(blob, ctx.name + ".dxf");
         }
+
+        console.log(document.getElementsByClassName('fa-spin'));
     }
 })();
