@@ -20,6 +20,33 @@ paraTab = function(outputContext, unordered, ordered){
   return newVariant(VAR_OBJECT, ordered);
 };
 
+paraStandardMount = function(outputContext, unordered, ordered){
+  var side = getVariantValueOrUndefined(ordered.side);
+  var offset = getVariantValueOrUndefined(ordered.offset);//CENTER
+  var boltLength = getVariantValueOrUndefined(ordered.boltLength);
+  var kerf = getVariantValueOrUndefined(ordered.kerf);
+
+  if(side == undefined || offset == undefined){
+    err = {t: "PARAM_ERROR", o: "side/offset missing or invalid in call to paraStandardMount()"};
+    outputContext.errors[outputContext.errors.length] = err;
+    console.error(err.t, err.o);
+    ordered.side = newVariant(VAR_STRING, 'top');
+    ordered.offset = newVariant(VAR_NUMBER, 2);
+  }
+  if (boltLength == undefined){
+    ordered.boltLength = newVariant(VAR_NUMBER, 20);
+  }
+  if (kerf == undefined){
+    ordered.kerf = newVariant(VAR_NUMBER, 0.02);
+  }
+
+  ordered.isModification = newVariant(VAR_NUMBER, 1);
+  ordered.modType = newVariant(VAR_STRING, 'stdMount');
+  ordered.length = newVariant(VAR_NUMBER, 19 + (ordered.kerf.value*2) - (0.04));//FIXED NUMBER
+
+  return newVariant(VAR_OBJECT, ordered);
+};
+
 
 paraOutline = function(outputContext, unordered, ordered){
   var name = getName(ordered, outputContext, "outline");
@@ -93,6 +120,44 @@ paraOutline = function(outputContext, unordered, ordered){
         x += mod.length
         path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: topLeft.y.value};
         y = topLeft.y.value;
+      }
+
+      if (mod.mType == 'stdMount'){
+        var tabDisplacement = 3.04;
+        var kerf = mod.kerf;
+        var tabLength = 5 - kerf;//hole is 5mm, so 4.98
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y-tabDisplacement};
+        y -= tabDisplacement;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+tabLength, endy: y};
+        x += tabLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: topLeft.y.value};
+        y = topLeft.y.value;//end of the first tab
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+kerf+2.925, endy: y}; //movement distance to start of bolt cutout
+        x += kerf+2.925;//add on the kerf
+        var xBoltHole = x;
+
+        //nut box
+        path[path.length] = {'type': 'line', startx: x-1.7, starty: y+9, endx: x+3.15+1.7, endy: y+9};
+        path[path.length] = {'type': 'line', startx: x-1.7, starty: y+9+5.2, endx: x+3.15+1.7, endy: y+9+5.2};
+        path[path.length] = {'type': 'line', startx: x-1.7, starty: y+9, endx: x-1.7, endy: y+9+5.2};
+        path[path.length] = {'type': 'line', startx: x+3.15+1.7, starty: y+9, endx: x+3.15+1.7, endy: y+9+5.2};
+
+
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+mod.boltLength};
+        y += mod.boltLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+3.15, endy: y};//size of the bolt hole
+        x += 3.15;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: topLeft.y.value};
+        y = topLeft.y.value; //end of the down thing
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+kerf+2.925, endy: y}; //movement to start of tab
+        x += kerf+2.925;//add on the kerf
+
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y-tabDisplacement};
+        y -= tabDisplacement;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+tabLength, endy: y};
+        x += tabLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: topLeft.y.value};
+        y = topLeft.y.value;//end of the second tab
       }
     }
   }
@@ -230,6 +295,9 @@ function genOrderedModificationSet(parameters, width, height){
       var length = getVariantValueOrUndefined(mod.value.length);
       var offset = getVariantValueOrUndefined(mod.value.offset);
       var mType = getVariantValueOrUndefined(mod.value.modType);
+      var boltLength = getVariantValueOrUndefined(mod.value.boltLength);
+      var kerf = getVariantValueOrUndefined(mod.value.kerf);
+
       if (offset < 0) {
         switch (side){
           case 'left':
@@ -245,16 +313,16 @@ function genOrderedModificationSet(parameters, width, height){
 
       switch (side){
         case 'left':
-          left[left.length] = {displacement: displacement, length: length, offset: offset, mType: mType};
+          left[left.length] = {displacement: displacement, length: length, offset: offset, mType: mType, boltLength: boltLength, kerf: kerf};
           break;
         case 'right':
-          right[right.length] = {displacement: displacement, length: length, offset: offset, mType: mType};
+          right[right.length] = {displacement: displacement, length: length, offset: offset, mType: mType, boltLength: boltLength, kerf: kerf};
           break;
         case 'top':
-          top[top.length] = {displacement: displacement, length: length, offset: offset, mType: mType};
+          top[top.length] = {displacement: displacement, length: length, offset: offset, mType: mType, boltLength: boltLength, kerf: kerf};
           break;
         case 'bottom':
-          bottom[bottom.length] = {displacement: displacement, length: length, offset: offset, mType: mType};
+          bottom[bottom.length] = {displacement: displacement, length: length, offset: offset, mType: mType, boltLength: boltLength, kerf: kerf};
           break;
       }
     }

@@ -172,6 +172,9 @@ function defaultFunctionHandlers(){
     example: 'paraTab(\n  	offset: -2,\n  	side: \'left\',\n  	displacement: 4,\n  	length: 5,\n  )'
   }
 
+  // ========= BUILTIN-FUNCTION: paraStandardMount(...) ===
+  funcs.paraStandardMount = paraStandardMount;
+
   // ========= BUILTIN-FUNCTION: paraOutline(...) =========
   funcs.parametricOutline = paraOutline;
   ddlDocumentationObjects['parametricOutline'] = {
