@@ -91,7 +91,7 @@
                 <div layout="column" flex="89">
                   <md-subheader class="md-no-sticky">Render Preview
 
-                  <md-icon md-font-library="material-icons" class="fa-spin">cached</md-icon>
+                  <md-icon md-font-library="material-icons" ng-show="isDirty" ng-click="execute()">cached</md-icon>
 
                   </md-subheader>
                     <div style="text-align: center;" ng-show="isDirty">
@@ -128,18 +128,19 @@
           <md-content layout="column" flex class="md-padding" ng-show="mainC.focus == 'docs'" ng-controller="documentationController">
               <h1 flex="5">Documentation</h1>
 
-              <div layout="column" flex>
-                <h2 flex="5">Syntactic features</h1>
+              <div flex>
+                <h2>Syntactic features</h1>
               </div>
 
-              <div layout="column" flex>
-                <h2 flex="5">Builtin Reference</h1>
+              <div flex>
+                <h2 >Builtin Reference</h1>
 
-                <div layout="column" ng-repeat="(name, data) in dynamicDocumentation">
-                  <h3 flex="5"><md-icon md-font-library="material-icons">functions</md-icon> {{name}}</h3>
-                  <p><i>{{data.type}}</i></p>
-                  <p>{{data.desc}}</p>
-                  <pre>{{data.example}}</pre>
+                <div ng-repeat="(name, data) in dynamicDocumentation">
+                  <h3 ><md-icon md-font-library="material-icons">functions</md-icon> {{name}}</h3>
+                  <p ><i>{{data.type}}</i></p>
+                  <p >{{data.desc}}</p>
+                  <pre >{{data.example}}</pre>
+                  <br><br>
                 </div>
               </div>
           </md-content>
