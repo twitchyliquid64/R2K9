@@ -175,6 +175,43 @@ function defaultFunctionHandlers(){
   // ========= BUILTIN-FUNCTION: paraStandardMount(...) ===
   funcs.paraStandardMount = paraStandardMount;
 
+  // ========= BUILTIN-FUNCTION: mountF(...) ==============
+  funcs.mountF = function(outputContext, unordered, ordered){
+    var height_inc_tolerance = 3;
+    var mountTotalWidth = 19;
+    var name = getName(ordered, outputContext, "mountF");
+    var center = getVariantValueOrUndefined(ordered.center);
+
+    if(center == undefined){
+      err = {t: "PARAM_ERROR", o: "center missing or invalid in call to mountF()"};
+      outputContext.errors[outputContext.errors.length] = err;
+      console.error(err.t, err.o);
+      center = {x: newVariant(VAR_NUMBER, 10), y: newVariant(VAR_NUMBER, 10)};
+    }
+
+    var leftSlotVertices = [{x: center.x.value - (mountTotalWidth/2), y: center.y.value - (height_inc_tolerance/2)},
+                            {x: center.x.value - (mountTotalWidth/2), y: center.y.value + (height_inc_tolerance/2)},
+                            {x: center.x.value - (mountTotalWidth/2) + 5, y: center.y.value + (height_inc_tolerance/2)},
+                            {x: center.x.value - (mountTotalWidth/2) + 5, y: center.y.value - (height_inc_tolerance/2)}];
+    var leftSlotPath = constructClosedPolylinePath(name+"_slotleft", leftSlotVertices);
+    outputContext.addPath(name+"_slotleft", leftSlotPath);
+
+    outputContext.addPath(name+"_bolthole", [{'type': 'circle', 'x': center.x.value, 'y': center.y.value, 'radius': 1.51}]);
+
+    var rightSlotVertices = [{x: center.x.value + (mountTotalWidth/2) - 5, y: center.y.value - (height_inc_tolerance/2)},
+                            {x: center.x.value + (mountTotalWidth/2) - 5, y: center.y.value + (height_inc_tolerance/2)},
+                            {x: center.x.value + (mountTotalWidth/2), y: center.y.value + (height_inc_tolerance/2)},
+                            {x: center.x.value + (mountTotalWidth/2), y: center.y.value - (height_inc_tolerance/2)}];
+    var rightSlotPath = constructClosedPolylinePath(name+"_slotright", rightSlotVertices);
+    outputContext.addPath(name+"_slotright", rightSlotPath);
+
+
+    return newVariant(VAR_OBJECT, {
+      isMountF: newVariant(VAR_NUMBER, 1),
+      center: newVariant(VAR_OBJECT, center)
+    });
+  }
+
   // ========= BUILTIN-FUNCTION: paraOutline(...) =========
   funcs.parametricOutline = paraOutline;
   ddlDocumentationObjects['parametricOutline'] = {

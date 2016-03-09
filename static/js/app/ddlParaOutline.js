@@ -21,6 +21,8 @@ paraTab = function(outputContext, unordered, ordered){
 };
 
 paraStandardMount = function(outputContext, unordered, ordered){
+  var mountLength = 19;//fixed by design - dont change
+
   var side = getVariantValueOrUndefined(ordered.side);
   var offset = getVariantValueOrUndefined(ordered.offset);//CENTER
   var boltLength = getVariantValueOrUndefined(ordered.boltLength);
@@ -40,9 +42,10 @@ paraStandardMount = function(outputContext, unordered, ordered){
     ordered.tolerance = newVariant(VAR_NUMBER, 0.02);
   }
 
+  ordered.offset = newVariant(VAR_NUMBER, offset - (mountLength/2));//make is so the offset defines the center
   ordered.isModification = newVariant(VAR_NUMBER, 1);
   ordered.modType = newVariant(VAR_STRING, 'stdMount');
-  ordered.length = newVariant(VAR_NUMBER, 19);//FIXED NUMBER
+  ordered.length = newVariant(VAR_NUMBER, mountLength);//FIXED NUMBER
 
   return newVariant(VAR_OBJECT, ordered);
 };
