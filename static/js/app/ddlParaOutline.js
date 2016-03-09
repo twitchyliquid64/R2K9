@@ -196,6 +196,44 @@ paraOutline = function(outputContext, unordered, ordered){
         path[path.length] = {'type': 'line', startx: x, starty: y, endx: x-mod.displacement, endy: y};
         x = topRight.x.value;
       }
+
+      if (mod.mType == 'stdMount'){
+        var tabDisplacement = 3.04;
+        var tolerance = mod.tolerance;
+        var tabLength = 5 - tolerance;//hole is 5mm, so 4.98
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+tabDisplacement, endy: y}; //draw out the first tab
+        x += tabDisplacement;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tabLength};       //move along the first tab
+        y += tabLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: topRight.x.value, endy: y};   //come back to the rectangle border
+        x = topRight.x.value;//end of the first tab
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tolerance+2.925}; //move distance to start of bolt cutout
+        y += tolerance+2.925;//add on the tolerance
+
+        //nut box
+        var nutBoxRadi = 1.7;
+        path[path.length] = {'type': 'line', startx: x-9, starty: y-nutBoxRadi, endx: x-9, endy: y+3.15+nutBoxRadi};
+        path[path.length] = {'type': 'line', startx: x-9-5.2, starty: y-nutBoxRadi, endx: x-9-5.2, endy: y+3.15+nutBoxRadi};
+        path[path.length] = {'type': 'line', startx: x-9, starty: y-nutBoxRadi, endx: x-9-5.2, endy: y-nutBoxRadi};
+        path[path.length] = {'type': 'line', startx: x-9, starty: y+3.15+nutBoxRadi, endx: x-9-5.2, endy: y+3.15+nutBoxRadi};
+
+        //hole for bolt shaft to go
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x-mod.boltLength, endy: y};
+        x -= mod.boltLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+3.15};//size of the bolt hole
+        y += 3.15;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: topRight.x.value, endy: y};
+        x = topRight.x.value; //end of the down thing
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tolerance+2.925}; //movement to start of tab
+        y += tolerance+2.925;//add on the tolerance
+
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+tabDisplacement, endy: y};
+        x += tabDisplacement;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tabLength};
+        y += tabLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: topRight.x.value, endy: y};
+        x = topRight.x.value;//end of the second tab
+      }
     }
   }
 
@@ -302,6 +340,44 @@ paraOutline = function(outputContext, unordered, ordered){
         y += mod.length
         path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+mod.displacement, endy: y};
         x = topLeft.x.value;
+      }
+
+      if (mod.mType == 'stdMount'){
+        var tabDisplacement = 3.04;
+        var tolerance = mod.tolerance;
+        var tabLength = 5 - tolerance;//hole is 5mm, so 4.98
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x-tabDisplacement, endy: y}; //draw out the first tab
+        x -= tabDisplacement;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tabLength};       //move along the first tab
+        y += tabLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: topLeft.x.value, endy: y};   //come back to the rectangle border
+        x = topLeft.x.value;//end of the first tab
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tolerance+2.925}; //move distance to start of bolt cutout
+        y += tolerance+2.925;//add on the tolerance
+
+        //nut box
+        var nutBoxRadi = 1.7;
+        path[path.length] = {'type': 'line', startx: x+9, starty: y-nutBoxRadi, endx: x+9, endy: y+3.15+nutBoxRadi};
+        path[path.length] = {'type': 'line', startx: x+9+5.2, starty: y-nutBoxRadi, endx: x+9+5.2, endy: y+3.15+nutBoxRadi};
+        path[path.length] = {'type': 'line', startx: x+9, starty: y-nutBoxRadi, endx: x+9+5.2, endy: y-nutBoxRadi};
+        path[path.length] = {'type': 'line', startx: x+9, starty: y+3.15+nutBoxRadi, endx: x+9+5.2, endy: y+3.15+nutBoxRadi};
+
+        //hole for bolt shaft to go
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x+mod.boltLength, endy: y};
+        x += mod.boltLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+3.15};//size of the bolt hole
+        y += 3.15;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: topLeft.x.value, endy: y};
+        x = topLeft.x.value; //end of the down thing
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tolerance+2.925}; //movement to start of tab
+        y += tolerance+2.925;//add on the tolerance
+
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x-tabDisplacement, endy: y};
+        x -= tabDisplacement;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: x, endy: y+tabLength};
+        y += tabLength;
+        path[path.length] = {'type': 'line', startx: x, starty: y, endx: topLeft.x.value, endy: y};
+        x = topLeft.x.value;//end of the second tab
       }
     }
   }
