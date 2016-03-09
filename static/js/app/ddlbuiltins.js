@@ -181,6 +181,9 @@ function defaultFunctionHandlers(){
     var mountTotalWidth = 19;
     var name = getName(ordered, outputContext, "mountF");
     var center = getVariantValueOrUndefined(ordered.center);
+    var orientation = getVariantValueOrUndefined(ordered.orientation);
+    var isVertical = false;
+    if (orientation == true || orientation == 'vertical')isVertical = true;
 
     if(center == undefined){
       err = {t: "PARAM_ERROR", o: "center missing or invalid in call to mountF()"};
@@ -189,21 +192,39 @@ function defaultFunctionHandlers(){
       center = {x: newVariant(VAR_NUMBER, 10), y: newVariant(VAR_NUMBER, 10)};
     }
 
-    var leftSlotVertices = [{x: center.x.value - (mountTotalWidth/2), y: center.y.value - (height_inc_tolerance/2)},
-                            {x: center.x.value - (mountTotalWidth/2), y: center.y.value + (height_inc_tolerance/2)},
-                            {x: center.x.value - (mountTotalWidth/2) + 5, y: center.y.value + (height_inc_tolerance/2)},
-                            {x: center.x.value - (mountTotalWidth/2) + 5, y: center.y.value - (height_inc_tolerance/2)}];
-    var leftSlotPath = constructClosedPolylinePath(name+"_slotleft", leftSlotVertices);
-    outputContext.addPath(name+"_slotleft", leftSlotPath);
+    if (isVertical){
+      var topSlotVertices = [{y: center.y.value - (mountTotalWidth/2), x: center.x.value - (height_inc_tolerance/2)},
+                              {y: center.y.value - (mountTotalWidth/2), x: center.x.value + (height_inc_tolerance/2)},
+                              {y: center.y.value - (mountTotalWidth/2) + 5, x: center.x.value + (height_inc_tolerance/2)},
+                              {y: center.y.value - (mountTotalWidth/2) + 5, x: center.x.value - (height_inc_tolerance/2)}];
+      var topSlotPath = constructClosedPolylinePath(name+"_slottop", topSlotVertices);
+      outputContext.addPath(name+"_slottop", topSlotPath);
+    } else {
+      var leftSlotVertices = [{x: center.x.value - (mountTotalWidth/2), y: center.y.value - (height_inc_tolerance/2)},
+                              {x: center.x.value - (mountTotalWidth/2), y: center.y.value + (height_inc_tolerance/2)},
+                              {x: center.x.value - (mountTotalWidth/2) + 5, y: center.y.value + (height_inc_tolerance/2)},
+                              {x: center.x.value - (mountTotalWidth/2) + 5, y: center.y.value - (height_inc_tolerance/2)}];
+      var leftSlotPath = constructClosedPolylinePath(name+"_slotleft", leftSlotVertices);
+      outputContext.addPath(name+"_slotleft", leftSlotPath);
+    }
 
     outputContext.addPath(name+"_bolthole", [{'type': 'circle', 'x': center.x.value, 'y': center.y.value, 'radius': 1.51}]);
 
-    var rightSlotVertices = [{x: center.x.value + (mountTotalWidth/2) - 5, y: center.y.value - (height_inc_tolerance/2)},
-                            {x: center.x.value + (mountTotalWidth/2) - 5, y: center.y.value + (height_inc_tolerance/2)},
-                            {x: center.x.value + (mountTotalWidth/2), y: center.y.value + (height_inc_tolerance/2)},
-                            {x: center.x.value + (mountTotalWidth/2), y: center.y.value - (height_inc_tolerance/2)}];
-    var rightSlotPath = constructClosedPolylinePath(name+"_slotright", rightSlotVertices);
-    outputContext.addPath(name+"_slotright", rightSlotPath);
+    if (isVertical){
+      var bottomSlotVertices = [{y: center.y.value + (mountTotalWidth/2) - 5, x: center.x.value - (height_inc_tolerance/2)},
+                              {y: center.y.value + (mountTotalWidth/2) - 5, x: center.x.value + (height_inc_tolerance/2)},
+                              {y: center.y.value + (mountTotalWidth/2), x: center.x.value + (height_inc_tolerance/2)},
+                              {y: center.y.value + (mountTotalWidth/2), x: center.x.value - (height_inc_tolerance/2)}];
+      var bottomSlotPath = constructClosedPolylinePath(name+"_slotbottom", bottomSlotVertices);
+      outputContext.addPath(name+"_slotbottom", bottomSlotPath);
+    } else {
+      var rightSlotVertices = [{x: center.x.value + (mountTotalWidth/2) - 5, y: center.y.value - (height_inc_tolerance/2)},
+                              {x: center.x.value + (mountTotalWidth/2) - 5, y: center.y.value + (height_inc_tolerance/2)},
+                              {x: center.x.value + (mountTotalWidth/2), y: center.y.value + (height_inc_tolerance/2)},
+                              {x: center.x.value + (mountTotalWidth/2), y: center.y.value - (height_inc_tolerance/2)}];
+      var rightSlotPath = constructClosedPolylinePath(name+"_slotright", rightSlotVertices);
+      outputContext.addPath(name+"_slotright", rightSlotPath);
+    }
 
 
     return newVariant(VAR_OBJECT, {
@@ -211,6 +232,14 @@ function defaultFunctionHandlers(){
       center: newVariant(VAR_OBJECT, center)
     });
   }
+  ddlDocumentationObjects['mountF'] = {
+    type: 'subset-function',
+    name: 'mountF',
+    desc: 'Generates the female receptacle which a parametric Outlines\' paraStandardMount connects with. Specify the center point, and if you want it in a vertical or horizontal orientation. Defaults to horizontal orientation when orientation not specified.',
+    example: 'mountF(\n  	orientation: \'vertical\',\n  	center: point(10,10),\n  )'
+  }
+
+
 
   // ========= BUILTIN-FUNCTION: paraOutline(...) =========
   funcs.parametricOutline = paraOutline;
