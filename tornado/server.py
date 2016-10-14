@@ -117,9 +117,9 @@ class Server(object):
 
         self.handlers.append((path, h))
 
-    def run(self, postbind_cb):
+    def run(self):
       if os.environ.get("RUN_MAIN") == "true":
-        self._actually_run(postbind_cb)
+        self._actually_run()
       else:
         try:
           sys.exit(self._restart_with_reloader())
@@ -141,7 +141,7 @@ class Server(object):
 				continue
 		return exit_code
 
-    def _actually_run(self, postbind_cb):
+    def _actually_run(self):
 
         import logging
         import tornado.options
@@ -163,9 +163,8 @@ class Server(object):
         app = tornado.web.Application(self.handlers, static_path=self.static, cookie_secret=secret)
 
         http_server = tornado.httpserver.HTTPServer(app)
-        http_server.listen(self.port)
+        http_server.listen(self.port, self.hostname)
         logging.info("waiting for requests on http://%s:%d" % (self.hostname or "localhost", self.port))
         ioloop = tornado.ioloop.IOLoop.instance()
         tornado.autoreload.start(ioloop)
-	postbind_cb()
         ioloop.start()
