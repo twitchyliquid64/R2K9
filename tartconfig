@@ -1,0 +1,4 @@
+edit-tart --name $environment --log-stdout yes
+extension --extension DNSServ --operation set-record --type A --domain $domain --address $address --ttl 100
+extension --extension HTTPProxy --operation set-domain-proxy --domain $domain --targetport $port --scheme http --targethost localhost
+extension --extension HTTPProxy --operation add-authorization-rule --type USR_ALLOW --domain $domain --username $username
